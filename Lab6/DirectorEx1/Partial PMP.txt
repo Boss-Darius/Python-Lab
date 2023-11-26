@@ -1,0 +1,71 @@
+#Problema 1
+import pymc as pm
+import random
+import numpy as np
+from scipy import stats
+from random import seed
+from random import randint
+
+#1.1)
+
+stemeP0=0
+
+for i in range(0,20000):
+  seed(1)
+  castigator=''
+  alegere=randint(0,1)
+
+  if alegere==0:
+    DistributieP0=stats.binom(1,0.6)
+    DistributieP1=stats.binom(2,0.5)
+
+    n=DistributieP0.rvs()
+    m=DistributieP1.rvs(size=2)
+
+    if n>(m[0]+m[1]): stemeP0+=1
+
+  else :
+    DistributieP0=stats.binom(2,0.6)
+    DistributieP1=stats.binom(1,0.5)
+
+    n=DistributieP0.rvs(size=2)
+    m=DistributieP1.rvs()
+
+    if m<(n[0]+n[1]): stemeP0+=1
+
+if(stemeP0>20000-stemeP0): print("P0 are mai multe sanse de castig")
+else: print("P1 are mai multe sanse de castig")
+
+#1.2)
+
+from pgmpy.models import BayesianNetwork
+from pgmpy.factors.discrete import TabularCPD
+from pgmpy.inference import VariableElimination
+import matplotlib.pyplot as plt
+import networkx as nx
+
+model=BayesianNetwork([('M','P01'),('M','P11')])
+
+CPD_AlegereJocator=TabularCPD(variable='M', variable_card=2,values=[[0.5],[0.5]])
+
+CPD_JucatorP0=TabularCPD(variable='P01', variable_card=2,values=[[1/3,1/9],[2/3,8/9]],evidence=['M'],evidence_card=[2])
+
+CPD_JucatorP1=TabularCPD(variable='P11', variable_card=2,values=[[3/4,1/2],[1/4,1/2]],evidence=['M'],evidence_card=[2])
+
+model.add_cpds(CPD_AlegereJocator,CPD_JucatorP0,CPD_JucatorP1)
+
+assert model.check_model()
+pos = nx.circular_layout(model)
+nx.draw(model, pos=pos, with_labels=True, node_size=4000, font_weight='bold', node_color='skyblue')
+plt.show()
+
+#1.3)
+
+infer = VariableElimination(model)
+
+result0= infer.query(variables=['P0'], evidence={'M': 0})
+result1= infer.query(variables=['P1'], evidence={'M': 0})
+result=result1+result0
+
+print(result)
+#ne putem da seama din grafic ca este mai probabil sa obtinem stema in prima runda (P0(0)+P1(0))
