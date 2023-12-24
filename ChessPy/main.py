@@ -8,36 +8,49 @@ from Pieces import Queen
 from Field import Field
 from Field import ChessBoard
 
+# pionnegru=Pawn.Pawn(Field.BoardField((6,2)),"black")
 
+tabla = ChessBoard.Board([], [])
 
-#pionnegru=Pawn.Pawn(Field.BoardField((6,2)),"black")
+rege = King.King(tabla, (0, 4), "white")
+pion = Pawn.Pawn(tabla, (1, 3), "white")
+pion2 = Pawn.Pawn(tabla, (1, 1), "white")
+cal = Knight.Knight(tabla, (4, 3), "white")
+tura = Rook.Rook(tabla, (0, 7), "white")
+tura2= Rook.Rook(tabla,(0,0),"white")
+nebun = Bishop.Bishop(tabla, (4, 4), "white")
+dama = Queen.Queen(tabla, (6, 6), "white")
+pionnegru = Pawn.Pawn(tabla, (6, 2), "negru")
 
-tabla=ChessBoard.Board([],[])
+variabila = 1
+variabila = "acum sunt un sir de caractere"
 
-rege=King.King(tabla,(0,4),"white")
-pion=Pawn.Pawn(tabla,(1,3),"white")
-pion2=Pawn.Pawn(tabla,(1,1),"white")
-cal=Knight.Knight(tabla,(4,3),"white")
-tura=Rook.Rook(tabla,(5,5),"white")
-nebun=Bishop.Bishop(tabla,(4,4),"white")
-dama=Queen.Queen(tabla,(6,6),"white")
+variabila = [1, "acum sunt un string", 1.01]
 
+piesacurenta = rege
+print(piesacurenta.AttackMoves())
 while True:
-   print(nebun.PrintPosition())
-   print()
-   print("dama: ",dama.PossibleMoves())
-   print()
-   print(tabla)
-   print()
-   print(tabla.OccupiedField())
-   print()
-   print("row=")
-   row = int(input())
-   print("col=")
-   col = int(input())
+    # piesa=None
+    # for whitepiece in tabla.whitePieces:
+    #    if whitepiece.field==piesacurenta.field:
+    #       piesa=whitepiece
+    #       break
+    # if piesa.__class__ != piesacurenta.__class__: piesacurenta=piesa
 
-   camp = tabla.BoardFields[(7-row)*8+col]
-   dama.Move(camp)
+    print(piesacurenta.PrintPosition())
+    print()
+    print(piesacurenta, " ", piesacurenta.PossibleMoves())
+    print()
+    print(tabla)
+    print()
+    print(tabla.OccupiedField())
+    print()
+    print("row=")
+    row = int(input())
+    print("col=")
+    col = int(input())
 
-   print("dama.printprosition(): ",dama.PrintPosition())
-   print("dama.possiblemoves(): ",dama.PossibleMoves())
+    camp = tabla.BoardFields[(7 - row) * 8 + col]
+    piesacurenta.Move(camp)
+    print("acum m-am multat la ", piesacurenta.PrintPosition())
+    print("pot merge in ", piesacurenta.PossibleMoves())
