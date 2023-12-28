@@ -11,6 +11,7 @@ class Board:
             for j in range(0, 8):
                 self.BoardFields += [Field.BoardField((7 - i, j))]
 
+
     def AddPiece(self, piece):
         if piece.color == "white":
             self.whitePieces += [piece]
@@ -18,15 +19,12 @@ class Board:
             self.blackPieces += [piece]
 
     def RemovePiece(self, piece):
-        for wpiece in self.whitePieces:
-            if wpiece.field.position == piece.field.position:
-                self.whitePieces.remove(wpiece)
-                break
+        if piece in self.whitePieces:
+            piece.field.ChangeStatus()
+            self.whitePieces.remove(piece)
         else:
-            for bpiece in self.blackPieces:
-                if bpiece.field.position == piece.field.position:
-                    self.blackPieces.remove(bpiece)
-                    break
+            piece.field.ChangeStatus()
+            self.blackPieces.remove(piece)
 
     # functie de debug
     # verific daca se modifica pozitia pieselor albe pe tabla
@@ -45,6 +43,24 @@ class Board:
                     fieldstring += str(self.BoardFields[(7 - i) * 8 + j]) + " "
 
         return fieldstring
+
+    def GetPiece(self,field):
+        print(field.position)
+        if field in self.WhitePiecesFields():
+            print("luam piesa alba")
+            for whitepiece in self.whitePieces:
+
+                if whitepiece.field== field:
+                    return whitepiece
+        elif field in self.BlackPiecesFields():
+            print("luam piesa neagra")
+            for blackpiece in self.blackPieces:
+                if blackpiece.field== field:
+                    return blackpiece
+
+        else:
+            print("nu avem piesa pe campul asta")
+            return None
 
     def BlackPiecesFields(self):
         fields = []

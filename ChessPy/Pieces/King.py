@@ -100,10 +100,10 @@ class King(Piece.Piece):
             # attack left
             moves += [chr(65 + col - 1) + str(row + 1)]
             # move  left down
-            if (row != 0) :
+            if (row != 0):
                 moves += [chr(65 + col - 1) + str(row)]
             # move left up
-            if (row != 7) :
+            if (row != 7):
                 moves += [chr(65 + col - 1) + str(row + 2)]
 
         # checking if the king can attack on the right
@@ -112,16 +112,16 @@ class King(Piece.Piece):
 
             moves += [chr(65 + col + 1) + str(row + 1)]
 
-            #attack right down
+            # attack right down
             if (row != 0):
                 moves += [chr(65 + col + 1) + str(row)]
 
             # move right up
-            if (row != 7) :
+            if (row != 7):
                 moves += [chr(65 + col + 1) + str(row + 2)]
 
         # checking if the king can attack up
-        if (row != 7) :
+        if (row != 7):
             moves += [chr(65 + col) + str(row + 2)]  # moving right
         # checking if the king can attack down
         if (row != 0):
@@ -130,12 +130,12 @@ class King(Piece.Piece):
 
     def CanCastleKingSide(self):
         if self.canCastle:
+            row = self.field.position[0]
+            col = self.field.position[1]
+            chessboard = self.table
             # print("the king has the atribute on true")
             if self.color == "white":
                 # print("white king castling")
-                row = self.field.position[0]
-                col = self.field.position[1]
-                chessboard = self.table
                 if chessboard.BoardFields[8 * (7 - (row)) + col + 1].occupied == False and chessboard.BoardFields[
                     8 * (7 - (row)) + col + 2].occupied == False:
                     for whitepiece in chessboard.whitePieces:
@@ -145,18 +145,29 @@ class King(Piece.Piece):
                             if whitepiece.canCastle:
                                 self.rook1 = whitepiece
                                 return True
+            else:
+                if chessboard.BoardFields[8 * (7 - (row)) + col - 1].occupied == False and chessboard.BoardFields[
+                    8 * (7 - (row)) + col - 2].occupied == False:
+                    for blackpiece in chessboard.blackPieces:
+                        # print("finding the rook")
+                        if isinstance(blackpiece, Rook.Rook) and blackpiece.field.position == (row, col + 3):
+                            # rook found
+                            if blackpiece.canCastle:
+                                self.rook1 = blackpiece
+                                return True
         return False
 
     def CanCastleQueenSide(self):
         if self.canCastle:
+            row = self.field.position[0]
+            col = self.field.position[1]
+            chessboard = self.table
             # print("the king has the atribute on true")
             if self.color == "white":
                 # print("white king castling")
-                row = self.field.position[0]
-                col = self.field.position[1]
-                chessboard = self.table
                 if chessboard.BoardFields[8 * (7 - (row)) + col - 1].occupied == False and chessboard.BoardFields[
-                    8 * (7 - (row)) + col - 2].occupied == False:
+                    8 * (7 - (row)) + col - 2].occupied == False and chessboard.BoardFields[
+                    8 * (7 - (row)) + col - 3].occupied == False:
                     for whitepiece in chessboard.whitePieces:
                         # print("finding the rook")
                         if isinstance(whitepiece, Rook.Rook) and whitepiece.field.position == (row, col - 4):
@@ -164,8 +175,33 @@ class King(Piece.Piece):
                             if whitepiece.canCastle:
                                 self.rook2 = whitepiece
                                 return True
+            else:
+                if chessboard.BoardFields[8 * (7 - (row)) + col - 1].occupied == False and chessboard.BoardFields[
+                    8 * (7 - (row)) + col - 2].occupied == False and chessboard.BoardFields[
+                    8 * (7 - (row)) + col - 3].occupied == False:
+                    for blackpiece in chessboard.blackPieces:
+                        # print("finding the rook")
+                        if isinstance(blackpiece, Rook.Rook) and blackpiece.field.position == (row, col - 4):
+                            # print("rook found")
+                            if blackpiece.canCastle:
+                                self.rook2 = blackpiece
+                                return True
+
         return False
 
+    def InCheck(self):
+        enemyPieces=[]
+        enemyAttackMoves=[]
+        if self.color=="white":
+            enemyPieces=self.table.blackPieces
+        else:
+            enemyPieces=self.table.whitePieces
+
+        for piece in enemyPieces:
+            for attack in piece.AttackMoves():
+                enemyAttackMoves+=[attack]
+        if str(self.field) in enemyAttackMoves: return True
+        return False
     def Move(self, newfield):
         row = self.field.position[0]
         col = self.field.position[1]

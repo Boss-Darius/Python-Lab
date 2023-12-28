@@ -14,6 +14,7 @@ class Pawn(Piece.Piece):
         self.field.occupied = True
         self.moved = False
         self.promoted = False
+        self.Enpassant = False
 
     def Promote(self):
         if self.promoted == False:
@@ -30,7 +31,7 @@ class Pawn(Piece.Piece):
             if promoted == 2: return Rook.Rook(self.table, self.field.position, self.color)
             if promoted == 3: return Knight.Knight(self.table, self.field.position, self.color)
             if promoted == 4: return Bishop.Bishop(self.table, self.field.position, self.color)
-            self.promoted == True
+            self.promoted = True
 
     def PossibleMoves(self):
 
@@ -56,6 +57,22 @@ class Pawn(Piece.Piece):
                 if col != 7 and chessboard[8 * (7 - (row + 1)) + col + 1].occupied and self.CanCapture(row + 1,
                                                                                                        col + 1):
                     possibleMoves += [chr(65 + col + 1) + str(row + 2)]
+                # cheking if the pawn can Enpassant other pawns
+
+                if col != 7:
+                    if isinstance(self.table.GetPiece(chessboard[8 * (7 - (row)) + col + 1]),
+                                  Pawn) and self.table.GetPiece(
+                        chessboard[8 * (7 - (row)) + col + 1]).color != "white" and self.table.GetPiece(
+                        chessboard[8 * (7 - (row)) + col + 1]).Enpassant:
+                        possibleMoves += [chr(65 + col + 1) + str(row + 2)]
+
+                if col != 0:
+                    if isinstance(self.table.GetPiece(chessboard[8 * (7 - (row)) + col - 1]),
+                                  Pawn) and self.table.GetPiece(
+                        chessboard[8 * (7 - (row)) + col - 1]).color != "white" and self.table.GetPiece(
+                        chessboard[8 * (7 - (row)) + col - 1]).Enpassant:
+                        possibleMoves += [chr(65 + col - 1) + str(row + 2)]
+
         # the blackPawn can only move down
         else:
             if row == 6 and self.moved == False:
@@ -70,6 +87,21 @@ class Pawn(Piece.Piece):
                 if col != 7 and chessboard[8 * (7 - (row - 1)) + col + 1].occupied and self.CanCapture(row - 1,
                                                                                                        col + 1):
                     possibleMoves += [chr(65 + col + 1) + str(row)]
+            # cheking if the pawn can Enpassant other pawns
+
+            if col != 7:
+                if isinstance(self.table.GetPiece(chessboard[8 * (7 - (row)) + col + 1]),
+                              Pawn) and self.table.GetPiece(
+                    chessboard[8 * (7 - (row)) + col + 1]).color != "black" and self.table.GetPiece(
+                    chessboard[8 * (7 - (row)) + col + 1]).Enpassant:
+                    possibleMoves += [chr(65 + col + 1) + str(row)]
+
+            if col != 0:
+                if isinstance(self.table.GetPiece(chessboard[8 * (7 - (row)) + col - 1]),
+                              Pawn) and self.table.GetPiece(
+                    chessboard[8 * (7 - (row)) + col - 1]).color != "black" and self.table.GetPiece(
+                    chessboard[8 * (7 - (row)) + col - 1]).Enpassant:
+                    possibleMoves += [chr(65 + col - 1) + str(row)]
 
         return possibleMoves
 
@@ -81,34 +113,79 @@ class Pawn(Piece.Piece):
 
         # attack possibilities for the white pawn
         if self.color == "white":
-            if row != 7 and col != 0 and chessboard[8 * (7 - (row + 1)) + col - 1].occupied and self.CanCapture(row + 1,
-                                                                                                                col - 1):
+            if row != 7 and col != 0:
                 attackMoves += [chr(65 + col - 1) + str(row + 2)]
             # capture on right
-            if row != 7 and col != 7 and chessboard[8 * (7 - (row + 1)) + col + 1].occupied and self.CanCapture(row + 1,
-                                                                                                                col + 1):
+            if row != 7 and col != 7:
                 attackMoves += [chr(65 + col + 1) + str(row + 2)]
 
         # attack posibilities for the black pawn
         else:
-            if col != 0 and chessboard[8 * (7 - (row - 1)) + col - 1].occupied and self.CanCapture(row - 1, col - 1):
+            if col != 0 and row != 0:
                 attackMoves += [chr(65 + col - 1) + str(row)]
             # capture on right
-            if col != 7 and chessboard[8 * (7 - (row - 1)) + col + 1].occupied and self.CanCapture(row - 1, col + 1):
+            if col != 7 and row != 0:
                 attackMoves += [chr(65 + col + 1) + str(row)]
 
         return attackMoves
 
     def Move(self, newfield):
         if str(newfield) in self.PossibleMoves():
-            print("attack moves: ", self.AttackMoves())
+
+            # check if the pawn does the double fields move
+
+            if (self.color == "white" and self.field.position[0] + 2 == newfield.position[
+                0]) or self.color == "black" and self.field.position[0] - 2 == newfield.position[0]:
+                self.Enpassant = True
+
+            elif self.Enpassant == True:
+                self.Enpassant = False
+            # checking if the pawn can use the enpassant move on other pawns:
+            # for the white pawn
+            if self.color == "white":
+                if newfield.position[0] == self.field.position[0] + 1 and newfield.position[1] == self.field.position[
+                    1] + 1:
+                    piece = self.table.GetPiece(
+                        self.table.BoardFields[8 * (7 - (self.field.position[0])) + self.field.position[1] + 1])
+                    if isinstance(piece, Pawn) and piece.color == "black" and piece.Enpassant:
+                        self.table.RemovePiece(self.table.GetPiece(
+                            self.table.BoardFields[8 * (7 - (self.field.position[0])) + self.field.position[1] + 1]))
+                elif newfield.position[0] == self.field.position[0] + 1 and newfield.position[1] == self.field.position[
+                    1] - 1:
+                    piece = self.table.GetPiece(
+                        self.table.BoardFields[8 * (7 - (self.field.position[0])) + self.field.position[1] - 1])
+                    if isinstance(piece, Pawn) and piece.color == "black" and piece.Enpassant:
+                        self.table.RemovePiece(self.table.GetPiece(
+                            self.table.BoardFields[8 * (7 - (self.field.position[0])) + self.field.position[1] - 1]))
+            # for the black pawn
+            else:
+                if newfield.position[0] == self.field.position[0] - 1 and newfield.position[1] == self.field.position[
+                    1] + 1:
+                    piece = self.table.GetPiece(
+                        self.table.BoardFields[8 * (7 - (self.field.position[0])) + self.field.position[1] + 1])
+                    if isinstance(piece, Pawn) and piece.color == "black" and piece.Enpassant:
+                        self.table.RemovePiece(self.table.GetPiece(
+                            self.table.BoardFields[8 * (7 - (self.field.position[0])) + self.field.position[1] + 1]))
+                elif newfield.position[0] == self.field.position[0] - 1 and newfield.position[1] == self.field.position[
+                    1] - 1:
+                    piece = self.table.GetPiece(
+                        self.table.BoardFields[8 * (7 - (self.field.position[0])) + self.field.position[1] - 1])
+                    if isinstance(piece, Pawn) and piece.color == "black" and piece.Enpassant:
+                        self.table.RemovePiece(self.table.GetPiece(
+                            self.table.BoardFields[8 * (7 - (self.field.position[0])) + self.field.position[1] - 1]))
+
+
+            print(self, " can be ennpassanted : ", self.Enpassant)
+            if newfield.occupied:
+                self.table.RemovePiece(self.table.GetPiece(newfield))
             self.field.ChangeStatus()
             self.field = newfield
             newfield.ChangeStatus()
-            # checking if the pawn got to the promotong state
+            # checking if the pawn got to the promoting state
             # promoting the white pawn
+
             if newfield.position[0] == 7 and self.color == "white":
-                self = self.Promote()
+                self.Promote()
                 self.table.RemovePiece(self)
             # promoting the black pawn
             if newfield.position[0] == 0 and self.color == "black":
@@ -121,12 +198,5 @@ class Pawn(Piece.Piece):
     def __str__(self):
         if self.color == "white": return "♙"
         return "♟"
-
-    def __del__(self):
-        self.field.ChangeStatus()
-        if self.color == "white":
-            self.table.whitePieces.remove(self)
-        else:
-            self.table.blackPieces.remove(self)
 
         print("am ajuns pana aici")
