@@ -24,9 +24,9 @@ class Rook(Piece.Piece):
             # print(chr(65+i)+str(row+1))
             if chessboard[8 * (7 - (row)) + i].occupied == False:
                 # print("camp liber")
-                possiblemoves += [chr(65 + i) + str(row + 1)]
+                possiblemoves += [chessboard[8 * (7 - (row)) + i]]
             else:
-                if self.CanCapture(row, i): possiblemoves += [chr(65 + i) + str(row + 1)]
+                if self.CanCapture(row, i): possiblemoves += [chessboard[8 * (7 - (row)) + i]]
                 break
         # print("left")
         # left
@@ -35,9 +35,9 @@ class Rook(Piece.Piece):
             if chessboard[8 * (7 - (row)) + col - i].occupied == False:
 
                 # print("camp liber")
-                possiblemoves += [chr(65 + col - i) + str(row + 1)]
+                possiblemoves += [chessboard[8 * (7 - (row)) + col - i]]
             else:
-                if self.CanCapture(row, col - i): possiblemoves += [chr(65 + col - i) + str(row + 1)]
+                if self.CanCapture(row, col - i): possiblemoves += [chessboard[8 * (7 - (row)) + col - i]]
                 break
 
         # adding the vertical behavior
@@ -47,18 +47,18 @@ class Rook(Piece.Piece):
 
             if chessboard[8 * (7 - i) + col].occupied == False:
                 # print("da")
-                possiblemoves += [chr(65 + col) + str(i + 1)]
+                possiblemoves += [chessboard[8 * (7 - i) + col]]
             else:
-                if self.CanCapture(i, col): possiblemoves += [chr(65 + col) + str(i + 1)]
+                if self.CanCapture(i, col): possiblemoves += [chessboard[8 * (7 - i) + col]]
                 break
         # down
         for i in range(1, row + 1):
             # print(chr(65 + col) + str(row - i + 1))
             if chessboard[8 * (7 - (row - i)) + col].occupied == False:
                 # print("da")
-                possiblemoves += [chr(65 + col) + str(row - i + 1)]
+                possiblemoves += [chessboard[8 * (7 - (row - i)) + col]]
             else:
-                if self.CanCapture(row - i, col): possiblemoves += [chr(65 + col) + str(row - i + 1)]
+                if self.CanCapture(row - i, col): possiblemoves += [chessboard[8 * (7 - (row - i)) + col]]
                 break
         return possiblemoves
 
@@ -114,8 +114,8 @@ class Rook(Piece.Piece):
 
         return possiblemoves
 
-    def Move(self, newfield):
-        if str(newfield) in self.PossibleMoves():
+    def Move(self, newfield,moves):
+        if newfield in moves:
             if newfield.occupied:
                 self.table.RemovePiece(self.table.GetPiece(newfield))
             self.field.ChangeStatus()
@@ -124,7 +124,10 @@ class Rook(Piece.Piece):
             self.moved = True
             self.canCastle = False
         else:
-            print("That is not a correct move for the rook")
+            print(self.Warning())
+
+    def Warning(self):
+        return "That is not a correct move for the rook"
 
     def __str__(self):
         if self.color == "white": return "♖"

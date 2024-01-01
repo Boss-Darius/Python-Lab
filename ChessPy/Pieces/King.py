@@ -24,68 +24,68 @@ class King(Piece.Piece):
         if (col != 0):
             # move down
             if chessboard[8 * (7 - row) + col - 1].occupied == False:
-                print("down ", chr(65 + col - 1) + str(row + 1))
-                moves += [chr(65 + col - 1) + str(row + 1)]
+                # print("down ", chr(65 + col - 1) + str(row + 1))
+                moves += [chessboard[8 * (7 - row) + col - 1]]
             else:
-                if self.CanCapture(row, col - 1): moves += [chr(65 + col - 1) + str(row + 1)]
+                if self.CanCapture(row, col - 1): moves += [chessboard[8 * (7 - row) + col - 1]]
             # move down left
             if (row != 0) and (chessboard[8 * (7 - (row - 1)) + col - 1].occupied == False):
-                print("down left ", chr(65 + col - 1) + str(row))
-                moves += [chr(65 + col - 1) + str(row)]
+                # print("down left ", chr(65 + col - 1) + str(row))
+                moves += [chessboard[8 * (7 - (row - 1)) + col - 1]]
             else:
-                if row != 0 and self.CanCapture(row - 1, col - 1): moves += [chr(65 + col - 1) + str(row)]
+                if row != 0 and self.CanCapture(row - 1, col - 1): moves += [chessboard[8 * (7 - (row - 1)) + col - 1]]
             # move down right
             if (row != 7) and chessboard[8 * (7 - (row + 1)) + col - 1].occupied == False:
-                print("down right ", chr(65 + col - 1) + str(row + 2))
-                moves += [chr(65 + col - 1) + str(row + 2)]
+                # print("down right ", chr(65 + col - 1) + str(row + 2))
+                moves += [chessboard[8 * (7 - (row + 1)) + col - 1]]
             else:
-                if row != 7 and self.CanCapture(row + 1, col - 1): moves += [chr(65 + col - 1) + str(row + 2)]
+                if row != 7 and self.CanCapture(row + 1, col - 1): moves += [chessboard[8 * (7 - (row + 1)) + col - 1]]
         #
         # checking if the king can move up
         if (col != 7):
             # move up
             if chessboard[8 * (7 - row) + col + 1].occupied == False:
-                print("up ", chr(65 + col + 1) + str(row + 1))
-                moves += [chr(65 + col + 1) + str(row + 1)]
+                # print("up ", chr(65 + col + 1) + str(row + 1))
+                moves += [chessboard[8 * (7 - row) + col + 1]]
             else:
-                if self.CanCapture(row, col + 1): moves += [chr(65 + col + 1) + str(row + 1)]
+                if self.CanCapture(row, col + 1): moves += [chessboard[8 * (7 - row) + col + 1]]
             # move up left
             if (row != 0) and (chessboard[8 * (7 - (row - 1)) + col + 1].occupied == False):
-                print("up left", chr(65 + col + 1) + str(row))
-                moves += [chr(65 + col + 1) + str(row)]
+                # print("up left", chr(65 + col + 1) + str(row))
+                moves += [chessboard[8 * (7 - (row - 1)) + col + 1]]
             else:
-                if row != 0 and self.CanCapture(row - 1, col + 1): moves += [chr(65 + col + 1) + str(row)]
+                if row != 0 and self.CanCapture(row - 1, col + 1): moves += [chessboard[8 * (7 - (row - 1)) + col + 1]]
 
             # move up right
             if (row != 7) and chessboard[8 * (7 - (row + 1)) + col + 1].occupied == False:
-                print("up right", chr(65 + col + 1) + str(row + 2))
-                moves += [chr(65 + col + 1) + str(row + 2)]
+                # print("up right", chr(65 + col + 1) + str(row + 2))
+                moves += [chessboard[8 * (7 - (row + 1)) + col + 1]]
 
             else:
-                if row != 7 and self.CanCapture(row + 1, col + 1): moves += [chr(65 + col + 1) + str(row + 2)]
+                if row != 7 and self.CanCapture(row + 1, col + 1): moves += [chessboard[8 * (7 - (row + 1)) + col + 1]]
 
         # checking if the king can move to the right
         if (row != 7) and chessboard[8 * (7 - (row + 1)) + col].occupied == False:
-            print("right ", chr(65 + col) + str(row + 2))
-            moves += [chr(65 + col) + str(row + 2)]  # moving right
+            # print("right ", chr(65 + col) + str(row + 2))
+            moves += [chessboard[8 * (7 - (row + 1)) + col]]  # moving right
         else:
-            if row != 7 and self.CanCapture(row + 1, col): moves += [chr(65 + col) + str(row + 2)]
+            if row != 7 and self.CanCapture(row + 1, col): moves += [chessboard[8 * (7 - (row + 1)) + col]]
         # checking if the king can move to the left
         if (row != 0) and chessboard[8 * (7 - (row - 1)) + col].occupied == False:
-            moves += [chr(65 + col) + str(row)]  # moving left
+            moves += [chessboard[8 * (7 - (row - 1)) + col]]  # moving left
         else:
-            if row != 0 and self.CanCapture(row - 1, col): moves += [chr(65 + col) + str(row)]
+            if row != 0 and self.CanCapture(row - 1, col): moves += [chessboard[8 * (7 - (row - 1)) + col]]
 
         # checking if the king can castle kingside:
         condition = self.CanCastleKingSide()
 
         if condition:
-            moves += [chr(65 + col + 2) + str(row + 1)]
+            moves += [chessboard[8 * (7 - (row)) + col + 2]]  #
 
         # checking if the king can castle quuenside
         condition = self.CanCastleQueenSide()
         if condition:
-            moves += [chr(65 + col - 2) + str(row + 1)]
+            moves += [chessboard[8 * (7 - (row)) + col - 2]]
 
         return moves
 
@@ -129,7 +129,7 @@ class King(Piece.Piece):
         return moves
 
     def CanCastleKingSide(self):
-        if self.canCastle:
+        if self.canCastle and not self.InCheck():
             row = self.field.position[0]
             col = self.field.position[1]
             chessboard = self.table
@@ -158,7 +158,7 @@ class King(Piece.Piece):
         return False
 
     def CanCastleQueenSide(self):
-        if self.canCastle:
+        if self.canCastle and not self.InCheck():
             row = self.field.position[0]
             col = self.field.position[1]
             chessboard = self.table
@@ -190,31 +190,35 @@ class King(Piece.Piece):
         return False
 
     def InCheck(self):
-        enemyPieces=[]
-        enemyAttackMoves=[]
-        if self.color=="white":
-            enemyPieces=self.table.blackPieces
+        enemyPieces = []
+        enemyAttackMoves = []
+        if self.color == "white":
+            enemyPieces = self.table.blackPieces
         else:
-            enemyPieces=self.table.whitePieces
+            enemyPieces = self.table.whitePieces
 
         for piece in enemyPieces:
             for attack in piece.AttackMoves():
-                enemyAttackMoves+=[attack]
+                enemyAttackMoves += [attack]
         if str(self.field) in enemyAttackMoves: return True
         return False
-    def Move(self, newfield):
+
+    def Move(self, newfield, moves):
         row = self.field.position[0]
         col = self.field.position[1]
         chessboard = self.table.BoardFields
-        if str(newfield) in self.PossibleMoves():
+        if newfield in moves:
             # efectuarea rocadei mici
             if (self.field.position[1] + 2 == newfield.position[1]):
                 # print(str(chessboard[8*(7-(row))+col+1]))
-                self.rook1.Move(self.table.BoardFields[8 * (7 - (row)) + col + 1])
+                self.rook1.Move(self.table.BoardFields[8 * (7 - (row)) + col + 1], self.rook1.FilterMoves())
             # efectuarea rocadei mari
             if (self.field.position[1] - 2 == newfield.position[1]):
                 # print(str(chessboard[8*(7-(row))+col+1]))
-                self.rook2.Move(self.table.BoardFields[8 * (7 - (row)) + col - 1])
+                self.rook2.Move(self.table.BoardFields[8 * (7 - (row)) + col - 1], self.rook2.PossibleMoves())
+                # self.rook2.field.ChangeStatus()
+                # self.rook2.field=self.table.BoardFields[8 * (7 - (row)) + col - 1]
+                # self.rook2.field.ChangeStatus()
 
             self.field.ChangeStatus()
             self.field = newfield
@@ -223,7 +227,10 @@ class King(Piece.Piece):
             if self.canCastle == True: self.canCastle = False
 
         else:
-            print("That is not a correct move for the king")
+            print(self.Warning())
+
+    def Warning(self):
+        return "That is not a correct move for the King"
 
     def __str__(self):
         if self.color == "white": return "♔"

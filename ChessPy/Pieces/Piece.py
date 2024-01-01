@@ -19,13 +19,11 @@ class Piece:
 
     def CanCapture(self, row, col):
         chessboard = self.table.BoardFields
-        if (self.color == "white" and chessboard[
-            8 * (7 - (row)) + col] in self.table.BlackPiecesFields()):
+        if (self.color == "white" and chessboard[ 8 * (7 - (row)) + col] in self.table.BlackPiecesFields()):
             # print("capture for white")
             # we can't capture the kings
             if not (isinstance(self.table.GetPiece(chessboard[8 * (7 - (row)) + col]), Pieces.King.King)): return True
-        elif (self.color == "black" and chessboard[
-            8 * (7 - (row)) + col] in self.table.WhitePiecesFields()):
+        elif (self.color == "black" and chessboard[8 * (7 - (row)) + col] in self.table.WhitePiecesFields()):
             # print("capture for black")
             # we can't capture the kings
             if not (isinstance(self.table.GetPiece(chessboard[8 * (7 - (row)) + col]), Pieces.King.King)): return True
@@ -38,7 +36,8 @@ class Piece:
         for possibleMove in self.PossibleMoves():
             possibleMoves += [str(possibleMove)]
 
-        print(possibleMoves)
+        # print(possibleMoves)
+        return possibleMoves
 
     def FilterMoves(self):
 
@@ -46,15 +45,12 @@ class Piece:
         filteredMoves = []
         originalRow,originalCol=self.field.position
         for move in movesList:
-            stareCurenta = copy.deepcopy(self.table)
-            print("stare curenta")
-            print(stareCurenta)
-            print("am aratat starea curenta")
-            print()
-            itermediateState = stareCurenta
-            print("stare intermediara")
-            print(itermediateState)
-            print("am aratat starea intermediara")
+            itermediateState = copy.deepcopy(self.table)
+            # print("stare curenta")
+            # print(itermediateState)
+            # print("am aratat starea curenta")
+            # print()
+
             myKing = None
             if self.color == "white":
                 for piece in itermediateState.whitePieces:
@@ -72,9 +68,15 @@ class Piece:
 
             pieceIMove = itermediateState.GetPiece(itermediateState.BoardFields[8 * (7 - (originalRow)) + originalCol])
             print(pieceIMove)
-            pieceIMove.Move(itermediateState.BoardFields[8 * (7 - (row)) + col])
+            pieceIMove.Move(itermediateState.BoardFields[8 * (7 - (row)) + col], pieceIMove.PossibleMoves())
+
+            # print("stare intermediara")
+            # print(itermediateState)
+            # print("am aratat starea intermediara")
             if not myKing.InCheck():
                 filteredMoves += [move]
+                print(move," mutare valida")
+            else: print(move," mutare invalida")
         return filteredMoves
 
     def ShowFilteredMoves(self):
@@ -82,14 +84,17 @@ class Piece:
         for filteredMove in self.FilterMoves():
             filteredMoves += [str(filteredMove)]
 
-        print(filteredMoves)
+        # print(filteredMoves)
+        return filteredMoves
 
-    def Move(self, newfield):
-        if str(newfield) in self.PossibleMoves():
+    def Warning(self):
+        return "That is not a correct move for this piece"
+    def Move(self, newfield,moves):
+        if newfield in moves:
             if newfield.occupied:
                 self.table.RemovePiece(self.table.GetPiece(newfield))
             self.field.ChangeStatus()
             self.field = newfield
             newfield.ChangeStatus()
         else:
-            print("This field is occupied")
+            print(self.Warning())

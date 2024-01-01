@@ -10,7 +10,6 @@ class Queen(Piece.Piece):
         self.field.occupied = True
 
     def PossibleMoves(self):
-        # adding the rook-like behavior
         possiblemoves = []
 
         col = self.field.position[1]
@@ -23,9 +22,9 @@ class Queen(Piece.Piece):
             # print(chr(65+i)+str(row+1))
             if chessboard[8 * (7 - (row)) + i].occupied == False:
                 # print("camp liber")
-                possiblemoves += [chr(65 + i) + str(row + 1)]
+                possiblemoves += [chessboard[8 * (7 - (row)) + i]]
             else:
-                if self.CanCapture(row, i): possiblemoves += [chr(65 + i) + str(row + 1)]
+                if self.CanCapture(row, i): possiblemoves += [chessboard[8 * (7 - (row)) + i]]
                 break
         # print("left")
         # left
@@ -34,9 +33,9 @@ class Queen(Piece.Piece):
             if chessboard[8 * (7 - (row)) + col - i].occupied == False:
 
                 # print("camp liber")
-                possiblemoves += [chr(65 + col - i) + str(row + 1)]
+                possiblemoves += [chessboard[8 * (7 - (row)) + col - i]]
             else:
-                if self.CanCapture(row, col - i): possiblemoves += [chr(65 + col - i) + str(row + 1)]
+                if self.CanCapture(row, col - i): possiblemoves += [chessboard[8 * (7 - (row)) + col - i]]
                 break
 
         # adding the vertical behavior
@@ -46,20 +45,21 @@ class Queen(Piece.Piece):
 
             if chessboard[8 * (7 - i) + col].occupied == False:
                 # print("da")
-                possiblemoves += [chr(65 + col) + str(i + 1)]
+                possiblemoves += [chessboard[8 * (7 - i) + col]]
             else:
-                if self.CanCapture(i, col): possiblemoves += [chr(65 + col) + str(i + 1)]
+                if self.CanCapture(i, col): possiblemoves += [chessboard[8 * (7 - i) + col]]
                 break
         # down
         for i in range(1, row + 1):
             # print(chr(65 + col) + str(row - i + 1))
             if chessboard[8 * (7 - (row - i)) + col].occupied == False:
                 # print("da")
-                possiblemoves += [chr(65 + col) + str(row - i + 1)]
+                possiblemoves += [chessboard[8 * (7 - (row - i)) + col]]
             else:
-                if self.CanCapture(row - i, col): possiblemoves += [chr(65 + col) + str(row - i + 1)]
+                if self.CanCapture(row - i, col): possiblemoves += [chessboard[8 * (7 - (row - i)) + col]]
                 break
         # adding the bishop-like behavior
+
         if row != 0:
             r1 = row - 1
             c1 = col - 1
@@ -67,11 +67,11 @@ class Queen(Piece.Piece):
             while r1 >= 0 and c1 >= 0:
                 if chessboard[8 * (7 - r1) + c1].occupied == False:
                     # print("camp bun")
-                    possiblemoves += [chr(65 + c1) + str(r1 + 1)]
+                    possiblemoves += [chessboard[8 * (7 - r1) + c1]]
                     c1 -= 1
                     r1 -= 1
                 else:
-                    if self.CanCapture(r1, c1): possiblemoves += [chr(65 + c1) + str(r1 + 1)]
+                    if self.CanCapture(r1, c1): possiblemoves += [chessboard[8 * (7 - r1) + c1]]
                     break
 
             r1 = row - 1
@@ -80,39 +80,39 @@ class Queen(Piece.Piece):
             while r1 >= 0 and c1 <= 7:
                 if chessboard[8 * (7 - r1) + c1].occupied == False:
                     # print("camp bun")
-                    possiblemoves += [chr(65 + c1) + str(r1 + 1)]
+                    possiblemoves += [chessboard[8 * (7 - r1) + c1]]
                     c1 += 1
                     r1 -= 1
                 else:
-                    if self.CanCapture(r1, c1): possiblemoves += [chr(65 + c1) + str(r1 + 1)]
+                    if self.CanCapture(r1, c1): possiblemoves += [chessboard[8 * (7 - r1) + c1]]
                     break
             # checking if the bishop can move up
-            if row != 7:
-                r1 = row + 1
-                c1 = col - 1
-                # up left
-                while r1 <= 7 and c1 >= 0:
-                    if chessboard[8 * (7 - r1) + c1].occupied == False:
+        if row != 7:
+            r1 = row + 1
+            c1 = col - 1
+            # up left
+            while r1 <= 7 and c1 >= 0:
+                if chessboard[8 * (7 - r1) + c1].occupied == False:
                         # print("camp bun")
-                        possiblemoves += [chr(65 + c1) + str(r1 + 1)]
-                        c1 -= 1
-                        r1 += 1
-                    else:
-                        if self.CanCapture(r1, c1): possiblemoves += [chr(65 + c1) + str(r1 + 1)]
-                        break
+                    possiblemoves += [chessboard[8 * (7 - r1) + c1]]
+                    c1 -= 1
+                    r1 += 1
+                else:
+                    if self.CanCapture(r1, c1): possiblemoves += [chessboard[8 * (7 - r1) + c1]]
+                    break
 
-                r1 = row + 1
-                c1 = col + 1
-                # up right
-                while r1 <= 7 and c1 <= 7:
-                    if chessboard[8 * (7 - r1) + c1].occupied == False:
-                        # print("camp bun")
-                        possiblemoves += [chr(65 + c1) + str(r1 + 1)]
-                        c1 += 1
-                        r1 += 1
-                    else:
-                        if self.CanCapture(r1, c1): possiblemoves += [chr(65 + c1) + str(r1 + 1)]
-                        break
+            r1 = row + 1
+            c1 = col + 1
+            # up right
+            while r1 <= 7 and c1 <= 7:
+                if chessboard[8 * (7 - r1) + c1].occupied == False:
+                    # print("camp bun")
+                    possiblemoves += [chessboard[8 * (7 - r1) + c1]]
+                    c1 += 1
+                    r1 += 1
+                else:
+                    if self.CanCapture(r1, c1): possiblemoves += [chessboard[8 * (7 - r1) + c1]]
+                    break
         return possiblemoves
 
     def AttackMoves(self):
@@ -123,7 +123,6 @@ class Queen(Piece.Piece):
         chessboard = self.table.BoardFields
 
         # rook behavior
-        # right
         for i in range(col + 1, 8):
             # print(chr(65+i)+str(row+1))
             if chessboard[8 * (7 - (row)) + i].occupied == False:
@@ -169,7 +168,7 @@ class Queen(Piece.Piece):
         if row != 0:
             r1 = row - 1
             c1 = col - 1
-                # down left
+            # down left
             while r1 >= 0 and c1 >= 0:
                 if chessboard[8 * (7 - r1) + c1].occupied == False:
                     # print("camp bun")
@@ -185,7 +184,7 @@ class Queen(Piece.Piece):
             # down right
             while r1 >= 0 and c1 <= 7:
                 if chessboard[8 * (7 - r1) + c1].occupied == False:
-                        # print("camp bun")
+                    # print("camp bun")
                     possiblemoves += [chr(65 + c1) + str(r1 + 1)]
                     c1 += 1
                     r1 -= 1
@@ -193,43 +192,36 @@ class Queen(Piece.Piece):
                     possiblemoves += [chr(65 + c1) + str(r1 + 1)]
                     break
                 # checking if the bishop can move up
-            if row != 7:
-                r1 = row + 1
-                c1 = col - 1
-                # up left
-                while r1 <= 7 and c1 >= 0:
-                    if chessboard[8 * (7 - r1) + c1].occupied == False:
-                        # print("camp bun")
-                        possiblemoves += [chr(65 + c1) + str(r1 + 1)]
-                        c1 -= 1
-                        r1 += 1
-                    else:
-                        possiblemoves += [chr(65 + c1) + str(r1 + 1)]
-                        break
+        if row != 7:
+            r1 = row + 1
+            c1 = col - 1
+            # up left
+            while r1 <= 7 and c1 >= 0:
+                if chessboard[8 * (7 - r1) + c1].occupied == False:
+                    # print("camp bun")
+                    possiblemoves += [chr(65 + c1) + str(r1 + 1)]
+                    c1 -= 1
+                    r1 += 1
+                else:
+                    possiblemoves += [chr(65 + c1) + str(r1 + 1)]
+                    break
 
-                r1 = row + 1
-                c1 = col + 1
-                # up right
-                while r1 <= 7 and c1 <= 7:
-                    if chessboard[8 * (7 - r1) + c1].occupied == False:
-                         # print("camp bun")
-                        possiblemoves += [chr(65 + c1) + str(r1 + 1)]
-                        c1 += 1
-                        r1 += 1
-                    else:
-                        possiblemoves += [chr(65 + c1) + str(r1 + 1)]
-                        break
+            r1 = row + 1
+            c1 = col + 1
+            # up right
+            while r1 <= 7 and c1 <= 7:
+                if chessboard[8 * (7 - r1) + c1].occupied == False:
+                    # print("camp bun")
+                    possiblemoves += [chr(65 + c1) + str(r1 + 1)]
+                    c1 += 1
+                    r1 += 1
+                else:
+                    possiblemoves += [chr(65 + c1) + str(r1 + 1)]
+                    break
         return possiblemoves
 
-    def Move(self, newfield):
-        if str(newfield) in self.PossibleMoves():
-            if newfield.occupied:
-                self.table.RemovePiece(self.table.GetPiece(newfield))
-            self.field.ChangeStatus()
-            self.field = newfield
-            newfield.ChangeStatus()
-        else:
-            print("That is not a correct move for the queen")
+    def Warning(self):
+        return "That is not a correct move for the queen"
 
     def __str__(self):
         if self.color == "white": return "♕"

@@ -1,4 +1,11 @@
 from Field import Field
+import Pieces
+from Pieces import King
+from Pieces import Pawn
+from Pieces import Bishop
+from Pieces import Knight
+from Pieces import Rook
+from Pieces import Queen
 
 
 class Board:
@@ -11,6 +18,46 @@ class Board:
             for j in range(0, 8):
                 self.BoardFields += [Field.BoardField((7 - i, j))]
 
+    def __init__(self):
+        self.whitePieces = []
+        self.blackPieces = []
+        self.BoardFields = []
+
+        for i in range(0, 8):
+            for j in range(0, 8):
+                self.BoardFields += [Field.BoardField((7 - i, j))]
+        # adding the kings
+        King.King(self, (0, 4), "white")
+        King.King(self, (7, 4), "black")
+
+        # adding the queens
+        Queen.Queen(self, (0, 3), "white")
+        Queen.Queen(self, (7, 3), "black")
+
+        # adding the rooks
+
+        Rook.Rook(self, (0, 0), "white")
+        Rook.Rook(self, (0, 7), "white")
+        Rook.Rook(self, (7, 0), "black")
+        Rook.Rook(self, (7, 7), "black")
+
+        # adding the bishops
+        Bishop.Bishop(self, (0, 2), "white")
+        Bishop.Bishop(self, (0, 5), "white")
+        Bishop.Bishop(self, (7, 2), "black")
+        Bishop.Bishop(self, (7, 5), "black")
+
+        # adding the knights
+        Knight.Knight(self, (0, 1), "white")
+        Knight.Knight(self, (0, 6), "white")
+        Knight.Knight(self, (7, 1), "black")
+        Knight.Knight(self, (7, 6), "black")
+
+        # adding the pawns
+
+        for i in range(0, 8):
+            Pawn.Pawn(self, (1, i), "white")
+            Pawn.Pawn(self, (6, i), "black")
 
     def AddPiece(self, piece):
         if piece.color == "white":
@@ -44,22 +91,22 @@ class Board:
 
         return fieldstring
 
-    def GetPiece(self,field):
-        print(field.position)
+    def GetPiece(self, field):
+        # print(field.position)
         if field in self.WhitePiecesFields():
-            print("luam piesa alba")
+            # print("luam piesa alba")
             for whitepiece in self.whitePieces:
 
-                if whitepiece.field== field:
+                if whitepiece.field == field:
                     return whitepiece
         elif field in self.BlackPiecesFields():
-            print("luam piesa neagra")
+            # print("luam piesa neagra")
             for blackpiece in self.blackPieces:
-                if blackpiece.field== field:
+                if blackpiece.field == field:
                     return blackpiece
 
         else:
-            print("nu avem piesa pe campul asta")
+            # print("nu avem piesa pe campul asta")
             return None
 
     def BlackPiecesFields(self):
