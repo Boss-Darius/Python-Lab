@@ -5,63 +5,18 @@ from Pieces import Bishop
 from Pieces import Knight
 from Pieces import Rook
 from Pieces import Queen
+import tkinter as tk
+from PIL import ImageTk, Image
 
 from Field import ChessBoard
 from Players import Player
 from Players import AI
 
+from GUI import GUI
+test=GUI.GUI()
 
-def ChooseWhitePiece(table):
-    piese = table.whitePieces
-    print("alegea piesa :")
-    indice = int(input())
-
-    if indice < 0:
-        indice = 0
-    elif indice > len(piese):
-        indice = len(piese)
-
-    return piese[indice]
-
-
-def ChooseBlackPiece(table):
-    piese = table.blackPieces
-    print("alegea piesa :")
-    indice = int(input())
-
-    if indice < 0:
-        indice = 0
-    elif indice > len(piese):
-        indice = len(piese)
-
-    return piese[indice]
-
-
-# tabla = ChessBoard.Board([], [])
-#
-# rege = King.King(tabla, (0, 4), "white")
-# pion = Pawn.Pawn(tabla, (1, 3), "white")
-# pion2 = Pawn.Pawn(tabla, (1, 1), "white")
-# cal = Knight.Knight(tabla, (4, 3), "white")
-# tura = Rook.Rook(tabla, (0, 7), "white")
-# tura2 = Rook.Rook(tabla, (0, 0), "white")
-# nebun = Bishop.Bishop(tabla, (4, 4), "white")
-# dama = Queen.Queen(tabla, (6, 6), "white")
-# pionnegru = Pawn.Pawn(tabla, (6, 2), "black")
-# regenegru = King.King(tabla, (7, 4), "black")
-# turaneagra = Rook.Rook(tabla, (7, 7), "black")
-# turaneagra2 = Rook.Rook(tabla, (7, 0), "black")
-
-# print(rege.ShowFilteredMoves())
-# print(tura.ShowFilteredMoves())
 tabla=ChessBoard.Board()
 print(tabla)
-
-# for piece in tabla.whitePieces:
-#     print(piece," ",piece.PossibleMoves())
-#
-# for piece in tabla.blackPieces:
-#     print(piece," ",piece.PossibleMoves())
 
 
 Albul = Player.Player(tabla, "white")
@@ -77,7 +32,7 @@ black=[str(piece) for piece in Negrul.pieces]; white=[str(piece) for piece in Al
 
 print(black)
 print(white)
-# print(tura2.ShowFilteredMoves())
+# print(tura2.ShowFilteredInputMoves())
 while True:
     print(tabla)
     if Albul.CheckMated():
@@ -87,7 +42,7 @@ while True:
     Albul.GetPieces()
     white = [str(piece) for piece in Albul.pieces]
     print(white)
-    Albul.Move()
+    Albul.InputMove()
 
     for piece in tabla.blackPieces:
         if isinstance(piece,Pieces.Pawn.Pawn) and piece.Enpassant:
@@ -100,7 +55,7 @@ while True:
     Negrul.GetPieces()
     black = [str(piece) for piece in Negrul.pieces]
     print(black)
-    Negrul.Move()
+    Negrul.InputMove()
 
     for piece in tabla.whitePieces:
         if isinstance(piece,Pieces.Pawn.Pawn) and piece.Enpassant:
@@ -116,7 +71,7 @@ while True:
     # piesacurenta=ChooseWhitePiece(tabla)
     # print(piesacurenta.PrintPosition())
     # print()
-    # print(piesacurenta, " pot merge in", piesacurenta.ShowFilteredMoves())
+    # print(piesacurenta, " pot merge in", piesacurenta.ShowFilteredInputMoves())
     # print()
     # print(tabla)
     # print()
@@ -128,7 +83,7 @@ while True:
     # col = int(input())
     #
     # camp = tabla.BoardFields[(7 - row) * 8 + col]
-    # piesacurenta.Move(camp,piesacurenta.FilterMoves())
+    # piesacurenta.InputMove(camp,piesacurenta.FilterInputMoves())
     #
     # for piece in tabla.blackPieces:
     #     if isinstance(piece,Pieces.Pawn.Pawn) and piece.Enpassant:
@@ -137,8 +92,8 @@ while True:
     #
     # piesacurenta=ChooseBlackPiece(tabla)
     # print("acum m-am multat la ", piesacurenta.PrintPosition())
-    # print("pot merge in ", piesacurenta.ShowFilteredMoves())
-    # print("pot ataca la ", piesacurenta.AttackMoves())
+    # print("pot merge in ", piesacurenta.ShowFilteredInputMoves())
+    # print("pot ataca la ", piesacurenta.AttackInputMoves())
     # print(rege," in sah??? ", rege.InCheck())
     # print(regenegru," in sah??? ", regenegru.InCheck())
     # print(tabla)
@@ -151,7 +106,7 @@ while True:
     # col = int(input())
     #
     # camp = tabla.BoardFields[(7 - row) * 8 + col]
-    # piesacurenta.Move(camp,piesacurenta.FilterMoves())
+    # piesacurenta.InputMove(camp,piesacurenta.FilterInputMoves())
     #
     # print(tabla)
     # for piece in tabla.whitePieces:
@@ -160,8 +115,8 @@ while True:
     #         break
     #
     # print("acum m-am multat la ", piesacurenta.PrintPosition())
-    # print("pot merge in ", piesacurenta.FilterMoves())
-    # print("pot ataca la ", piesacurenta.AttackMoves())
+    # print("pot merge in ", piesacurenta.FilterInputMoves())
+    # print("pot ataca la ", piesacurenta.AttackInputMoves())
     # print(rege," in sah??? ", rege.InCheck())
     # print(regenegru," in sah??? ", regenegru.InCheck())
 

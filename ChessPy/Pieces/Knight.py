@@ -97,6 +97,9 @@ class Knight(Piece.Piece):
 
     def Warning(self):
         return "That is not a correct move for the knight"
+    def Image(self):
+        if self.color=="white": return "Images/cal alb.jpg"
+        else: return "Images/cal negru.jpg"
     def AttackMoves(self):
         col = self.field.position[1]
         row = self.field.position[0]

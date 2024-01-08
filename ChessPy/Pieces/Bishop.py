@@ -140,6 +140,9 @@ class Bishop(Piece.Piece):
     def Warning(self):
         return "That is not a correct move for the bishop"
 
+    def Image(self):
+        if self.color=="white": return "Images/nebun alb.jpg"
+        else: return "Images/nebun negru.jpg"
     def CorrectMove(self, newfield):
         if newfield in self.FilterMoves():
             if newfield.occupied:

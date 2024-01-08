@@ -67,7 +67,7 @@ class Piece:
             col = move.position[1]
 
             pieceIMove = itermediateState.GetPiece(itermediateState.BoardFields[8 * (7 - (originalRow)) + originalCol])
-            print(pieceIMove)
+            # print(pieceIMove)
             pieceIMove.Move(itermediateState.BoardFields[8 * (7 - (row)) + col], pieceIMove.PossibleMoves())
 
             # print("stare intermediara")
@@ -75,8 +75,8 @@ class Piece:
             # print("am aratat starea intermediara")
             if not myKing.InCheck():
                 filteredMoves += [move]
-                print(move," mutare valida")
-            else: print(move," mutare invalida")
+                # print(move," mutare valida")
+            # else: print(move," mutare invalida")
         return filteredMoves
 
     def ShowFilteredMoves(self):

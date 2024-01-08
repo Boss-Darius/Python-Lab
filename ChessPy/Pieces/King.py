@@ -14,6 +14,11 @@ class King(Piece.Piece):
         self.rook1 = None
         self.rook2 = None
 
+    def Image(self):
+        if self.color=="white":
+            return "Images/rege alb2.png"
+        else : return "Images/rege negru2.png"
+
     def PossibleMoves(self):
         moves = []
         row = self.field.position[0]
@@ -146,12 +151,13 @@ class King(Piece.Piece):
                                 self.rook1 = whitepiece
                                 return True
             else:
-                if chessboard.BoardFields[8 * (7 - (row)) + col - 1].occupied == False and chessboard.BoardFields[
-                    8 * (7 - (row)) + col - 2].occupied == False:
+                if chessboard.BoardFields[8 * (7 - (row)) + col + 1].occupied == False and chessboard.BoardFields[
+                    8 * (7 - (row)) + col + 2].occupied == False:
+                    print("fields clear")
                     for blackpiece in chessboard.blackPieces:
-                        # print("finding the rook")
+                        print("finding the rook")
                         if isinstance(blackpiece, Rook.Rook) and blackpiece.field.position == (row, col + 3):
-                            # rook found
+                            print("rook found")
                             if blackpiece.canCastle:
                                 self.rook1 = blackpiece
                                 return True
@@ -219,6 +225,9 @@ class King(Piece.Piece):
                 # self.rook2.field.ChangeStatus()
                 # self.rook2.field=self.table.BoardFields[8 * (7 - (row)) + col - 1]
                 # self.rook2.field.ChangeStatus()
+
+            if newfield.occupied:
+                self.table.RemovePiece(self.table.GetPiece(newfield))
 
             self.field.ChangeStatus()
             self.field = newfield

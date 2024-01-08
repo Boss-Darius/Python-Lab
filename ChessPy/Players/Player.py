@@ -1,3 +1,4 @@
+import Pieces.King
 from Pieces import King
 
 
@@ -8,9 +9,11 @@ class Player:
         self.currentPiece = None
         self.field = None
         self.king = None
-        self.pieces=[]
-        print("Set your name : ")
-        name = input()
+        self.pieces = []
+        self.name = None
+        self.GetPieces()
+
+    def SetName(self, name):
         self.name = name
 
     def GetPieces(self):
@@ -23,7 +26,7 @@ class Player:
             if isinstance(piece, King.King):
                 self.king = piece
 
-    def SelectPiece(self):
+    def InputSelectPiece(self):
         print("select row for piece: ")
         row = int(input())
         print("select column for piece: ")
@@ -31,11 +34,14 @@ class Player:
         while True:
             if (0 <= row and row <= 7) and (0 <= col and col <= 7):
                 self.currentPiece = self.table.GetPiece(self.table.BoardFields[8 * (7 - (row)) + col])
+                moves = [str(field) for field in self.currentPiece.FilterMoves()]
+                pmoves=[str(field) for field in self.currentPiece.PossibleMoves()]
+                print(str(self.currentPiece), ' Can go to :', moves,"but it's better to go to",pmoves ," and can attack to ", self.currentPiece.AttackMoves())
                 if self.currentPiece is None:
                     print("this field has no piece")
                 elif self.currentPiece.color != self.color:
                     print("I know it's tempting to control the enemy's pieces but chess won't allow and neither will I")
-                elif self.currentPiece.color==self.color and len(self.currentPiece.FilterMoves())==0:
+                elif self.currentPiece.color == self.color and len(self.currentPiece.FilterMoves()) == 0:
                     print("This piece can't be moved")
                 else:
                     break
@@ -44,7 +50,23 @@ class Player:
             print("select a valid column for piece: ")
             col = int(input())
 
-    def SelectField(self):
+    def SelectPiece(self, row, col):
+        piece = self.table.GetPiece(self.table.BoardFields[8 * (7 - (row)) + col])
+        if piece is None:
+            print("there is no piece there")
+            return False
+        elif piece.color != self.color:
+            print("I know it's tempting to control the enemy's pieces but chess won't allow and neither will I")
+            return False
+        elif piece.color == self.color and len(piece.FilterMoves()) == 0:
+            print("you can move this piece")
+            return False
+        else:
+            print("good choice")
+            self.currentPiece = piece
+            return True
+
+    def InputSelectField(self):
         print("select the row for the field : ")
         row = int(input())
 
@@ -61,17 +83,24 @@ class Player:
 
         self.field = self.table.BoardFields[8 * (7 - (row)) + col]
 
-    def Move(self):
+    def SelectField(self, row, col):
+        self.field = self.table.BoardFields[8 * (7 - (row)) + col]
+
+    def InputMove(self):
         print("Selecteaza piesa")
-        self.SelectPiece()
+        self.InputSelectPiece()
+        if isinstance(self.currentPiece, Pieces.King.King):
+            print(str(self.currentPiece) + " rocada mica:" + str(
+                self.currentPiece.CanCastleKingSide()) + " rocada mare" + str(self.currentPiece.CanCastleQueenSide()))
         print("Selecteaza campul")
-        self.SelectField()
+
+        self.InputSelectField()
         while True:
             if self.field in self.currentPiece.FilterMoves():
                 break
             else:
                 print("Selecteaza campul")
-                self.SelectField()
+                self.InputSelectField()
 
         self.currentPiece.Move(self.field, self.currentPiece.FilterMoves())
 

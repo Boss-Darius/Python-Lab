@@ -129,6 +129,9 @@ class Rook(Piece.Piece):
     def Warning(self):
         return "That is not a correct move for the rook"
 
+    def Image(self):
+        if self.color=="white": return "Images/tura alba.jpg"
+        else: return "Images/tura neagra.jpg"
     def __str__(self):
         if self.color == "white": return "♖"
         return "♜"

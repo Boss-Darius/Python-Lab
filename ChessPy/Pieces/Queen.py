@@ -223,9 +223,9 @@ class Queen(Piece.Piece):
     def Warning(self):
         return "That is not a correct move for the queen"
 
+    def Image(self):
+        if self.color=="white": return "Images/regina alba2.png"
+        else: return "Images/regina neagra.png"
     def __str__(self):
         if self.color == "white": return "♕"
         return "♛"
-
-
-        print("Dama a ajuns pana aici")
