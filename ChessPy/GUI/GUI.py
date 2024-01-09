@@ -300,7 +300,11 @@ class GUI:
                     self.state = "select-field"
                     print("starea este : ", self.state)
 
-    # selecteaza piesa pentru jucatorul curent sau captureaza piesa adversa
+    """selecteaza piesa pentru jucatorul curent sau captureaza piesa adversa
+    
+       returneaza None
+    """
+
     def ClickPiece(self, row, col):
         print(self.currentPlayer.name + " este la mutare! si are piesele")
 
@@ -345,7 +349,11 @@ class GUI:
             #         self.state="select-field"
             #     # self.currentPlayer.field=self.board.BoardFields[8*(row)+col]
 
-    # afiseaza piesele de sah pe campurile pe care se afla
+    """afiseaza piesele de sah pe campurile pe care se afla
+    
+       retunreaza None
+    """
+
     def DisplayPieces(self):
         square_size = 87.5
         for row in range(8):
@@ -362,8 +370,11 @@ class GUI:
                                              tags=piece_tag)
                     self.canvas.tag_bind(piece_tag, "<Button-1>", lambda event, r=row, c=col: self.ClickPiece(r, c))
 
-    # verifica daca jucatorul curent este AI sau utilizator
-    # efectueaza mutarea pentru jucator
+    """verifica daca jucatorul curent este AI sau utilizator efectueaza mutarea pentru jucator
+    
+       returnaza None
+    """
+
     def MoveForPlayer(self):
         print("am intrat in move Player")
         if isinstance(self.currentPlayer, AI.AI):
@@ -390,6 +401,11 @@ class GUI:
         self.currentPlayer.GetPieces()
         # afisam mutarea si scimbam jucatorul
         print("Verific daca jucatorul e in remiza")
+        if self.firstPlayer.InsufficientMaterial() and self.secondPlayer.InsufficientMaterial():
+            self.canvas.create_text(300, 350,
+                                    text="Remiza :/",
+                                    font=("Helvetica", 30), fill="red")
+            self.state = "game-ended"
         if self.ThreeHoldRule():
             self.canvas.create_text(300, 350,
                                     text="Remiza: 3 pozitii identice",
@@ -429,7 +445,8 @@ class GUI:
             self.state = "select-piece"
             # print("starea este : ", self.state)
 
-    # creaza fereastra pentru promovarea pionului
+    """creaza fereastra pentru promovarea pionului"""
+
     def CreateSelectionForPromotion(self):
         print("Promovam pionul lui " + self.currentPlayer.name)
         print(self.currentPlayer.currentPiece, " ", self.currentPlayer.currentPiece.field)
@@ -455,7 +472,8 @@ class GUI:
 
         self.window.wait_window(self.selectionMenu)
 
-    # promoveaza pionul in piesa aleasa de jucator prin apasarea butonului din fereastra de selectie
+    """promoveaza pionul in piesa aleasa de jucator prin apasarea butonului din fereastra de selectie"""
+
     def Promotion(self, piece):
         field = self.currentPlayer.currentPiece.field
         print("Alegem noua piesa pentru: " + self.currentPlayer.name)
@@ -475,7 +493,11 @@ class GUI:
         field.ChangeStatus()
         self.selectionMenu.destroy()
 
-    # verifica daca nu s-au repetat 3 pozitii pana in momentul curent
+    """verifica daca nu s-au repetat 3 pozitii pana in momentul curent
+    
+       returneaza 
+    """
+
     def ThreeHoldRule(self):
         # print("regula de 3 mutari")
         # print(self.previousPositions)

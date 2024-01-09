@@ -9,6 +9,10 @@ class Queen(Piece.Piece):
         self.table.AddPiece(self)
         self.field.occupied = True
 
+    """ Creates the moving pattern for the queen according to her current position
+        Returns a list of Field objects
+    """
+
     def PossibleMoves(self):
         possiblemoves = []
 
@@ -93,7 +97,7 @@ class Queen(Piece.Piece):
             # up left
             while r1 <= 7 and c1 >= 0:
                 if chessboard[8 * (7 - r1) + c1].occupied == False:
-                        # print("camp bun")
+                    # print("camp bun")
                     possiblemoves += [chessboard[8 * (7 - r1) + c1]]
                     c1 -= 1
                     r1 += 1
@@ -114,6 +118,10 @@ class Queen(Piece.Piece):
                     if self.CanCapture(r1, c1): possiblemoves += [chessboard[8 * (7 - r1) + c1]]
                     break
         return possiblemoves
+
+    """ Takes the string representation of the field where the queen can attack other pieces
+        Returns a list of string objects
+    """
 
     def AttackMoves(self):
         possiblemoves = []
@@ -163,7 +171,7 @@ class Queen(Piece.Piece):
             else:
                 possiblemoves += [chr(65 + col) + str(row - i + 1)]
                 break
-        #bishop behavior
+        # bishop behavior
 
         if row != 0:
             r1 = row - 1
@@ -223,9 +231,16 @@ class Queen(Piece.Piece):
     def Warning(self):
         return "That is not a correct move for the queen"
 
+    """ Shows the path to the image for the queen display oin the GUI
+        Returns a string
+    """
+
     def Image(self):
-        if self.color=="white": return "Images/regina alba2.png"
-        else: return "Images/regina neagra.png"
+        if self.color == "white":
+            return "Images/regina alba2.png"
+        else:
+            return "Images/regina neagra.png"
+
     def __str__(self):
         if self.color == "white": return "♕"
         return "♛"

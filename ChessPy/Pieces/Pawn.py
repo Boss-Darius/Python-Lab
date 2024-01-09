@@ -13,23 +13,17 @@ class Pawn(Piece.Piece):
         self.promoted = False
         self.Enpassant = False
 
+    """ Sets the promoted field of the pawn to True
+        Returns None
+    """
+
     def Promote(self):
         if self.promoted == False:
-            # # let the player choose what piece to promote to
-            # print("Promote "+str(self)+" to:")
-            # print("Queen:  1")
-            # print("Rook:   2")
-            # print("Knight: 3")
-            # print("Bishop: 4")
-            #
-            # promoted = int(input())
-            # # creating a new piece at the pawn's position
-            # if promoted == 1: return Queen.Queen(self.table, self.field.position, self.color)
-            # if promoted == 2: return Rook.Rook(self.table, self.field.position, self.color)
-            # if promoted == 3: return Knight.Knight(self.table, self.field.position, self.color)
-            # if promoted == 4: return Bishop.Bishop(self.table, self.field.position, self.color)
-            # # Queen.Queen(self.table, self.field.position, self.color)
             self.promoted = True
+
+    """ Creates the moving pattern for the pawn according to its current position 
+        Returns a list of Field objects
+    """
 
     def PossibleMoves(self):
 
@@ -106,14 +100,26 @@ class Pawn(Piece.Piece):
 
         return possibleMoves
 
+    """ Creates a warning indicating that the move is not correct for the pawn
+        Returns a string
+    """
+
     def Warning(self):
         return "That is not a correct move for this pawn"
+
+    """ Shows the path to the image for pawn display on the GUI
+        Returns a string
+    """
 
     def Image(self):
         if self.color == "white":
             return "Images/pion alb.jpg"
         else:
             return "Images/pion negru.jpg"
+
+    """ Takes the string representation of fields where the pawn can attack other pieces
+        Returns a list of string objects
+    """
 
     def AttackMoves(self):
         attackMoves = []
@@ -138,6 +144,10 @@ class Pawn(Piece.Piece):
                 attackMoves += [chr(65 + col + 1) + str(row)]
 
         return attackMoves
+
+    """ Move the pawn to a field from a list of Field objects
+        Returns None
+    """
 
     def Move(self, newfield, moves):
         if newfield in moves:

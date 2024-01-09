@@ -12,11 +12,24 @@ class Piece:
         self.table.AddPiece(self)
         self.field.occupied = True
 
+    """ Shows the representation of the piece's field as the chess board notation
+        Returns a string
+    """
+
     def PrintPosition(self):
         return self.field.PrintPosition()
 
+    """ Takes the string representation of the fields where the piece can attack other pieces
+        Function to be overriden by other classes
+        Returns None
+    """
+
     def AttackMoves(self):
-        return self.PossibleMoves
+        return None
+
+    """ Checks if the piece can capture the the piece on the field at the specific row and column
+        Returns True if the capture is allowed, False otherwise
+    """
 
     def CanCapture(self, row, col):
         chessboard = self.table.BoardFields
@@ -32,6 +45,10 @@ class Piece:
             # print("not capturing")
             return False
 
+    """ Creates a better way to visualize the moves a piece can do according to its moving pattern
+        Returns a list of string objects
+    """
+
     def ShowPossibleMoves(self):
         possibleMoves = []
         for possibleMove in self.PossibleMoves():
@@ -39,6 +56,10 @@ class Piece:
 
         # print(possibleMoves)
         return possibleMoves
+
+    """ Validates the moves a piece can make according to its moving pattern
+        Returns a list of Field objects
+    """
 
     def FilterMoves(self):
 
@@ -80,6 +101,10 @@ class Piece:
             # else: print(move," mutare invalida")
         return filteredMoves
 
+    """ Creates a better way to visualize the correct moves a piece can make
+        Returns a list of string objects
+    """
+
     def ShowFilteredMoves(self):
         filteredMoves = []
         for filteredMove in self.FilterMoves():
@@ -88,8 +113,17 @@ class Piece:
         # print(filteredMoves)
         return filteredMoves
 
+    """ Creates a warning for moving the piece on an invalid field
+        Function to be overriden by other classes
+        Returns a string
+    """
+
     def Warning(self):
         return "That is not a correct move for this piece"
+
+    """ Moves the piece on a new field from a list of Field object
+        Returns None
+    """
 
     def Move(self, newfield, moves):
         if newfield in moves:

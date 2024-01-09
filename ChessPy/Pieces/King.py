@@ -2,6 +2,7 @@ from Pieces import Piece
 from Pieces import Rook
 import copy
 
+
 class King(Piece.Piece):
     def __init__(self, table, position, color):
         self.color = color
@@ -14,11 +15,19 @@ class King(Piece.Piece):
         self.rook1 = None
         self.rook2 = None
 
+    """ Shows the path to the image for displaying the king on the GUI
+        Returns a string
+    """
+
     def Image(self):
         if self.color == "white":
             return "Images/rege alb2.png"
         else:
             return "Images/rege negru2.png"
+
+    """ Creates the moving pattern for the king according to his current position
+        Returns a list of string objects
+    """
 
     def PossibleMoves(self):
         moves = []
@@ -95,6 +104,10 @@ class King(Piece.Piece):
 
         return moves
 
+    """ Creates a list of strings objects representing the field where the king can attack other pieces
+        Returns a list of string objects
+    """
+
     def AttackMoves(self):
         moves = []
         row = self.field.position[0]
@@ -134,6 +147,10 @@ class King(Piece.Piece):
             moves += [chr(65 + col) + str(row)]  # moving left
         return moves
 
+    """ Checks if the ling can castle king side
+        Returns True if king side castling can be done, False otherwise
+    """
+
     def CanCastleKingSide(self):
         if self.canCastle and not self.InCheck():
             row = self.field.position[0]
@@ -163,6 +180,10 @@ class King(Piece.Piece):
                                 self.rook1 = blackpiece
                                 return True
         return False
+
+    """ Checks if the king can castle queen side
+        Returns True if the queen side castling can be done, False otherwise
+    """
 
     def CanCastleQueenSide(self):
         if self.canCastle and not self.InCheck():
@@ -196,8 +217,11 @@ class King(Piece.Piece):
 
         return False
 
+    """ Checks if the king is in check
+        Returns True if the king is in enemy pieces attack possibilities, False otherwise
+    """
+
     def InCheck(self):
-        enemyPieces = []
         enemyAttackMoves = []
         if self.color == "white":
             enemyPieces = self.table.blackPieces
@@ -209,6 +233,10 @@ class King(Piece.Piece):
                 enemyAttackMoves += [attack]
         if str(self.field) in enemyAttackMoves: return True
         return False
+
+    """ Moves the king to a field from a list of Field objects
+        Returns None
+    """
 
     def Move(self, newfield, moves):
         row = self.field.position[0]
@@ -241,6 +269,10 @@ class King(Piece.Piece):
 
         else:
             print(self.Warning())
+
+    """ Shows the warning for making an invalid move for the king
+        Returns a string
+    """
 
     def Warning(self):
         return "That is not a correct move for the King"

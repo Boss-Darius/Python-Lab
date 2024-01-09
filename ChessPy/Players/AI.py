@@ -13,6 +13,10 @@ class AI(Player.Player):
         self.pieces = []
         self.name = self.color + "Bot"
 
+    """ Sets the piece for the AI as a random piece the AI has that can be moved
+        returns None
+    """
+
     def SelectPiece(self):
         piecesICanMove = []
 
@@ -25,11 +29,19 @@ class AI(Player.Player):
 
         self.currentPiece = piecesICanMove[index]
 
+    """ Sets a random field where the piece of the AI can move
+        returns None
+    """
+
     def SelectField(self):
         # seed(1)
         moves = self.currentPiece.FilterMoves()
         index = randint(0, len(moves) - 1)
         self.field = moves[index]
+
+    """ Moves the AI's piece to the selected field
+        returns None
+    """
 
     def Move(self):
         self.SelectPiece()
