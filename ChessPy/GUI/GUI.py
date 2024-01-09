@@ -14,6 +14,9 @@ import copy
 
 
 class GUI:
+    # contructor pentru interfata grafica
+    # initializeaza fereastra pentru setarea jucatorilor si dupa
+    # reseteaza fereastra pentru a incepe jocul de sah
     def __init__(self):
         self.board = ChessBoard.Board()
         self.previousPositions = []
@@ -117,6 +120,7 @@ class GUI:
 
         self.window.mainloop()
 
+    # schimba jucatorul curent
     def SwitchPlayer(self):
         if self.currentPlayer == self.firstPlayer:
             self.currentPlayer = self.secondPlayer
@@ -124,6 +128,9 @@ class GUI:
             self.currentPlayer = self.firstPlayer
 
         print(self.currentPlayer.name + " este acum la mutare")
+
+    # verifica ce jucator are albul si ce jucator are negrul
+    # si initializeaza jocul de sah
 
     def CreateGame(self):
         if self.playAsWhite:
@@ -196,22 +203,27 @@ class GUI:
         self.ResetWindow()
         print("ia sa vedem ce piese avem")
 
+    # seteaza flag-ul pentru ca utilizatorul sa joace cu albul
     def WhiteKingButton(self):
         print("vei juca ca albul")
         self.playAsWhite = True
 
+    # seteaza flag-ul pentru ca utilizatorul sa joace cu negrul
     def BlackKingButton(self):
         print("vei juca ca negrul")
         self.playAsWhite = False
 
+    # seteaza flag-ul pentru ca utilizatorul sa joace cu un bot
     def PlayWithAI(self):
         print("vei juca cu un AI")
         self.playWithFriend = False
 
+    # seteaza flag-ul pentru ca utilizatorul sa joace cu alt utilizator
     def PlayWithFriend(self):
         print("Vei juca cu un prieten (sper ca tie prieten)")
         self.playWithFriend = True
 
+    # sterge fereastra de initializare a jocului si o creeaza pe cea pentru joc
     def ResetWindow(self):
         self.canvas.delete("all")
 
@@ -228,24 +240,23 @@ class GUI:
         self.state = "select-piece"
         # self.canvas.create_image(0, 0, image=bg, anchor="nw")
 
+    # creeaza grid-ul pentru tabla de sah
     def DisplayBoard(self):
-        # Assuming self.board is an instance of ChessBoard
         for row in range(8):
             for col in range(8):
                 color = "#FFF2BD" if (row + col) % 2 == 0 else "#744C29"
                 x1, y1 = col * 87.5, row * 87.5
                 x2, y2 = x1 + 87.5, y1 + 87.5
 
-                # Draw a rectangle for each square
                 self.canvas.create_rectangle([x1, y1], [x2, y2], outline="black", width=1, fill=color,
                                              tags=f"square_{row}_{col}")
 
-                # Make each square responsive to the click event
                 self.canvas.tag_bind(f"square_{row}_{col}", "<Button-1>",
                                      lambda event, r=row, c=col: self.ClickField(r, c))
 
         self.DisplayPieces()
 
+    # preia piesa de pe camplul respectiv sau muta piesa jucatorului curent pe campul respectiv
     def ClickField(self, row, col):
 
         self.currentPlayer.GetPieces()
@@ -289,6 +300,7 @@ class GUI:
                     self.state = "select-field"
                     print("starea este : ", self.state)
 
+    # selecteaza piesa pentru jucatorul curent sau captureaza piesa adversa
     def ClickPiece(self, row, col):
         print(self.currentPlayer.name + " este la mutare! si are piesele")
 
@@ -333,8 +345,9 @@ class GUI:
             #         self.state="select-field"
             #     # self.currentPlayer.field=self.board.BoardFields[8*(row)+col]
 
+    # afiseaza piesele de sah pe campurile pe care se afla
     def DisplayPieces(self):
-        square_size = 87.5  # Adjust this size based on your grid size
+        square_size = 87.5
         for row in range(8):
             for col in range(8):
                 square_center_x = col * square_size + square_size // 2
@@ -349,6 +362,8 @@ class GUI:
                                              tags=piece_tag)
                     self.canvas.tag_bind(piece_tag, "<Button-1>", lambda event, r=row, c=col: self.ClickPiece(r, c))
 
+    # verifica daca jucatorul curent este AI sau utilizator
+    # efectueaza mutarea pentru jucator
     def MoveForPlayer(self):
         print("am intrat in move Player")
         if isinstance(self.currentPlayer, AI.AI):
@@ -369,6 +384,7 @@ class GUI:
 
         self.previousPositions += [str(self.board)]
         self.SwitchPlayer()
+
         self.ResetWindow()
 
         self.currentPlayer.GetPieces()
@@ -413,6 +429,7 @@ class GUI:
             self.state = "select-piece"
             # print("starea este : ", self.state)
 
+    # creaza fereastra pentru promovarea pionului
     def CreateSelectionForPromotion(self):
         print("Promovam pionul lui " + self.currentPlayer.name)
         print(self.currentPlayer.currentPiece, " ", self.currentPlayer.currentPiece.field)
@@ -438,6 +455,7 @@ class GUI:
 
         self.window.wait_window(self.selectionMenu)
 
+    # promoveaza pionul in piesa aleasa de jucator prin apasarea butonului din fereastra de selectie
     def Promotion(self, piece):
         field = self.currentPlayer.currentPiece.field
         print("Alegem noua piesa pentru: " + self.currentPlayer.name)
@@ -457,6 +475,7 @@ class GUI:
         field.ChangeStatus()
         self.selectionMenu.destroy()
 
+    # verifica daca nu s-au repetat 3 pozitii pana in momentul curent
     def ThreeHoldRule(self):
         # print("regula de 3 mutari")
         # print(self.previousPositions)
