@@ -2,6 +2,10 @@ from Pieces import Piece
 
 
 class Bishop(Piece.Piece):
+    """
+    This class implements the chess bishop piece behavior
+    """
+
     def __init__(self, table, position, color):
         self.color = color
         self.table = table
@@ -10,6 +14,10 @@ class Bishop(Piece.Piece):
         self.field.occupied = True
 
     def PossibleMoves(self):
+        """
+        Creates the moving pattern of the bishop according to its current position
+        :return: list of Field objects
+        """
         possiblemoves = []
 
         col = self.field.position[1]
@@ -51,7 +59,7 @@ class Bishop(Piece.Piece):
             # up left
             while r1 <= 7 and c1 >= 0:
                 if chessboard[8 * (7 - r1) + c1].occupied == False:
-                        # print("camp bun")
+                    # print("camp bun")
                     possiblemoves += [chessboard[8 * (7 - r1) + c1]]
                     c1 -= 1
                     r1 += 1
@@ -74,6 +82,10 @@ class Bishop(Piece.Piece):
         return possiblemoves
 
     def AttackMoves(self):
+        """
+        Creates a list of string objectes representing the fields where the knight can attack other pieces
+        :return: list of string
+        """
         possiblemoves = []
 
         col = self.field.position[1]
@@ -112,10 +124,10 @@ class Bishop(Piece.Piece):
         if row != 7:
             r1 = row + 1
             c1 = col - 1
-                # up left
+            # up left
             while r1 <= 7 and c1 >= 0:
                 if chessboard[8 * (7 - r1) + c1].occupied == False:
-                        # print("camp bun")
+                    # print("camp bun")
                     possiblemoves += [chr(65 + c1) + str(r1 + 1)]
                     c1 -= 1
                     r1 += 1
@@ -138,20 +150,21 @@ class Bishop(Piece.Piece):
         return possiblemoves
 
     def Warning(self):
+        """
+        Creates the warning for making an invalid move for the bishop
+        :return: string
+        """
         return "That is not a correct move for the bishop"
 
     def Image(self):
-        if self.color=="white": return "Images/nebun alb.jpg"
-        else: return "Images/nebun negru.jpg"
-    def CorrectMove(self, newfield):
-        if newfield in self.FilterMoves():
-            if newfield.occupied:
-                self.table.RemovePiece(self.table.GetPiece(newfield))
-            self.field.ChangeStatus()
-            self.field = newfield
-            newfield.ChangeStatus()
+        """
+        Returns the path for the image used for displaying the bishop on screen
+        :return: string
+        """
+        if self.color == "white":
+            return "Images/nebun alb.jpg"
         else:
-            print("That is not a correct move for the bishop")
+            return "Images/nebun negru.jpg"
 
     def __str__(self):
         if self.color == "white": return "♗"

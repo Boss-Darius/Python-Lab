@@ -2,6 +2,10 @@ from Pieces import Piece
 
 
 class Rook(Piece.Piece):
+    """
+    This class implements the chess rook piece behavior
+    """
+
     def __init__(self, table, position, color):
         self.color = color
         self.table = table
@@ -12,6 +16,10 @@ class Rook(Piece.Piece):
         self.canCastle = True
 
     def PossibleMoves(self):
+        """
+        Creates the moving pattern for the queen according to her current position
+        :return: list of Field objects
+        """
         possiblemoves = []
 
         col = self.field.position[1]
@@ -63,6 +71,10 @@ class Rook(Piece.Piece):
         return possiblemoves
 
     def AttackMoves(self):
+        """
+        Creates a list of string representing the attack field where the rook can attack
+        :return: list of string objects
+        """
         possiblemoves = []
 
         col = self.field.position[1]
@@ -114,10 +126,19 @@ class Rook(Piece.Piece):
 
         return possiblemoves
 
-    def Move(self, newfield,moves):
+    def Move(self, newfield, moves):
+        """
+        Moves the rook to a new field on the chess board
+        :param newfield: field where I move the rook to
+        :param moves: list of Field objects representing the rook's correct or possible moves
+        :return: None
+        """
         if newfield in moves:
             if newfield.occupied:
                 self.table.RemovePiece(self.table.GetPiece(newfield))
+                self.table.noCaptureCount = 0
+            else:
+                self.table.noCaptureCount += 1
             self.field.ChangeStatus()
             self.field = newfield
             newfield.ChangeStatus()
@@ -127,11 +148,22 @@ class Rook(Piece.Piece):
             print(self.Warning())
 
     def Warning(self):
+        """
+        Returns the warning for making an invalid move for the pawn
+        :return: string
+        """
         return "That is not a correct move for the rook"
 
     def Image(self):
-        if self.color=="white": return "Images/tura alba.jpg"
-        else: return "Images/tura neagra.jpg"
+        """
+        Returns the path to the image for displaying the rook on screen
+        :return: string
+        """
+        if self.color == "white":
+            return "Images/tura alba.jpg"
+        else:
+            return "Images/tura neagra.jpg"
+
     def __str__(self):
         if self.color == "white": return "♖"
         return "♜"

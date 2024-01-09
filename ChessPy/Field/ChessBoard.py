@@ -10,7 +10,16 @@ import copy
 
 
 class Board:
+    """
+    This class implements the chess board behavior
+    """
+
     def __init__(self, whitePieces, blackPieces):
+        """
+        Constructor used for creating a specific position
+        :param whitePieces: white pieces on the board
+        :param blackPieces: black pieces on the board
+        """
         self.whitePieces = whitePieces
         self.blackPieces = blackPieces
         self.BoardFields = []
@@ -21,6 +30,9 @@ class Board:
                 self.BoardFields += [Field.BoardField((7 - i, j))]
 
     def __init__(self):
+        """
+        The basic constructor for a chessboard
+        """
         self.whitePieces = []
         self.blackPieces = []
         self.BoardFields = []
@@ -63,12 +75,22 @@ class Board:
             Pawn.Pawn(self, (6, i), "black")
 
     def AddPiece(self, piece):
+        """
+        Adds a piece on the board
+        :param piece: the piece to be added
+        :return: None
+        """
         if piece.color == "white":
             self.whitePieces += [piece]
         else:
             self.blackPieces += [piece]
 
     def RemovePiece(self, piece):
+        """
+        Removes a piece from the board
+        :param piece: the piece to be removed
+        :return: None
+        """
         if piece in self.whitePieces:
             piece.field.ChangeStatus()
             self.whitePieces.remove(piece)
@@ -79,6 +101,10 @@ class Board:
     # functie de debug
     # verific daca se modifica pozitia pieselor albe pe tabla
     def CheckWhitePiecesFields(self):
+        """
+        Shows the positions of the white pieces (usefull for debugging)
+        :return: None
+        """
         print(self.whitePieces)
         for i in range(0, len(self.whitePieces)):
             print(self.whitePieces[i], ' ', self.whitePieces[i].field.occupied)
@@ -86,6 +112,11 @@ class Board:
     # functie de debug
     # verific ca nu cumva o piesa sa mentina un camp ocupat dupa ce a parasit acel camp
     def OccupiedField(self):
+        """
+        Creates a string representation of all fields on the board that are occupied
+        (usefull for debugging)
+        :return: a list of string objects
+        """
         fieldstring = ""
         for i in range(0, 8):
             for j in range(0, 8):
@@ -95,6 +126,11 @@ class Board:
         return fieldstring
 
     def GetPiece(self, field):
+        """
+        Getter function for obtaining a piece from a specific field
+        :param field: the field from where I take the piece from
+        :return: the piece on the field given if there is a piece there, None otherwise
+        """
         # print(field.position)
         if field in self.WhitePiecesFields():
             # print("luam piesa alba")
@@ -113,6 +149,10 @@ class Board:
             return None
 
     def BlackPiecesFields(self):
+        """
+        Returns the fields where the black pieces are on the board
+        :return: a list of Field objects
+        """
         fields = []
         for blackpiece in self.blackPieces:
             fields += [blackpiece.field]
@@ -120,6 +160,10 @@ class Board:
         return fields
 
     def WhitePiecesFields(self):
+        """
+        Returns the fields where the white pieces are on the board
+        :return: a list of Field objects
+        """
         fields = []
         for whitepiece in self.whitePieces:
             fields += [whitepiece.field]
@@ -127,6 +171,7 @@ class Board:
         return fields
 
     def __str__(self):
+
         stringBoard = ""
         whitepiecespositions = []
         blackpiecespositions = []

@@ -3,6 +3,10 @@ import copy
 
 
 class Pawn(Piece.Piece):
+    """
+    This class implements the pawn's behavior
+    """
+
     def __init__(self, table, position, color):
         self.color = color
         self.table = table
@@ -13,20 +17,17 @@ class Pawn(Piece.Piece):
         self.promoted = False
         self.Enpassant = False
 
-    """ Sets the promoted field of the pawn to True
-        Returns None
-    """
-
     def Promote(self):
+        """ Sets the promoted field of the pawn to True
+            :return: None
+        """
         if self.promoted == False:
             self.promoted = True
 
-    """ Creates the moving pattern for the pawn according to its current position 
-        Returns a list of Field objects
-    """
-
     def PossibleMoves(self):
-
+        """ Creates the moving pattern for the pawn according to its current position
+             :return: list
+         """
         possibleMoves = []
         row = self.field.position[0]
         col = self.field.position[1]
@@ -100,28 +101,25 @@ class Pawn(Piece.Piece):
 
         return possibleMoves
 
-    """ Creates a warning indicating that the move is not correct for the pawn
-        Returns a string
-    """
-
     def Warning(self):
+        """ Creates a warning indicating that the move is not correct for the pawn
+            :return: string
+        """
         return "That is not a correct move for this pawn"
 
-    """ Shows the path to the image for pawn display on the GUI
-        Returns a string
-    """
-
     def Image(self):
+        """ Shows the path to the image for pawn display on the GUI
+            :return: string
+        """
         if self.color == "white":
             return "Images/pion alb.jpg"
         else:
             return "Images/pion negru.jpg"
 
-    """ Takes the string representation of fields where the pawn can attack other pieces
-        Returns a list of string objects
-    """
-
     def AttackMoves(self):
+        """ Takes the string representation of fields where the pawn can attack other pieces
+            :return:  list
+        """
         attackMoves = []
         row = self.field.position[0]
         col = self.field.position[1]
@@ -145,11 +143,14 @@ class Pawn(Piece.Piece):
 
         return attackMoves
 
-    """ Move the pawn to a field from a list of Field objects
-        Returns None
-    """
-
     def Move(self, newfield, moves):
+        """
+        Moves the pawn to a field from a list of Field objects
+
+        :param newfield: field I move the pawn to
+        :param moves: list of Field objects representing the pawn's correct or possible moves
+        :return: None
+        """
         if newfield in moves:
 
             # check if the pawn does the double fields move

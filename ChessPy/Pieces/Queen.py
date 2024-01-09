@@ -2,6 +2,10 @@ from Pieces import Piece
 
 
 class Queen(Piece.Piece):
+    """
+    This class implements the chess queen piece behavior
+    """
+
     def __init__(self, table, position, color):
         self.color = color
         self.table = table
@@ -9,11 +13,10 @@ class Queen(Piece.Piece):
         self.table.AddPiece(self)
         self.field.occupied = True
 
-    """ Creates the moving pattern for the queen according to her current position
-        Returns a list of Field objects
-    """
-
     def PossibleMoves(self):
+        """ Creates the moving pattern for the queen according to her current position
+           :return: list
+        """
         possiblemoves = []
 
         col = self.field.position[1]
@@ -119,11 +122,10 @@ class Queen(Piece.Piece):
                     break
         return possiblemoves
 
-    """ Takes the string representation of the field where the queen can attack other pieces
-        Returns a list of string objects
-    """
-
     def AttackMoves(self):
+        """ Takes the string representation of the field where the queen can attack other pieces
+            :return: list
+        """
         possiblemoves = []
 
         col = self.field.position[1]
@@ -231,11 +233,10 @@ class Queen(Piece.Piece):
     def Warning(self):
         return "That is not a correct move for the queen"
 
-    """ Shows the path to the image for the queen display oin the GUI
-        Returns a string
-    """
-
     def Image(self):
+        """ Shows the path to the image for the queen display oin the GUI
+            :return: string
+            """
         if self.color == "white":
             return "Images/regina alba2.png"
         else:

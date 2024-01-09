@@ -1,9 +1,12 @@
 from Pieces import Piece
 from Pieces import Rook
-import copy
 
 
 class King(Piece.Piece):
+    """
+    This class implements the chess King piece behavior
+    """
+
     def __init__(self, table, position, color):
         self.color = color
         self.table = table
@@ -15,21 +18,19 @@ class King(Piece.Piece):
         self.rook1 = None
         self.rook2 = None
 
-    """ Shows the path to the image for displaying the king on the GUI
-        Returns a string
-    """
-
     def Image(self):
+        """ Shows the path to the image for displaying the king on the GUI
+             :return: string
+         """
         if self.color == "white":
             return "Images/rege alb2.png"
         else:
             return "Images/rege negru2.png"
 
-    """ Creates the moving pattern for the king according to his current position
-        Returns a list of string objects
-    """
-
     def PossibleMoves(self):
+        """ Creates the moving pattern for the king according to his current position
+            :return: a list of Field objects
+        """
         moves = []
         row = self.field.position[0]
         col = self.field.position[1]
@@ -104,11 +105,10 @@ class King(Piece.Piece):
 
         return moves
 
-    """ Creates a list of strings objects representing the field where the king can attack other pieces
-        Returns a list of string objects
-    """
-
     def AttackMoves(self):
+        """ Creates a list of strings objects representing the field where the king can attack other pieces
+            :return: list of string objects
+        """
         moves = []
         row = self.field.position[0]
         col = self.field.position[1]
@@ -147,11 +147,10 @@ class King(Piece.Piece):
             moves += [chr(65 + col) + str(row)]  # moving left
         return moves
 
-    """ Checks if the ling can castle king side
-        Returns True if king side castling can be done, False otherwise
-    """
-
     def CanCastleKingSide(self):
+        """ Checks if the king can castle king side
+            :return: True if king side castling can be done, False otherwise
+        """
         if self.canCastle and not self.InCheck():
             row = self.field.position[0]
             col = self.field.position[1]
@@ -181,11 +180,10 @@ class King(Piece.Piece):
                                 return True
         return False
 
-    """ Checks if the king can castle queen side
-        Returns True if the queen side castling can be done, False otherwise
-    """
-
     def CanCastleQueenSide(self):
+        """ Checks if the king can castle queen side
+            :return: True if the queen side castling can be done, False otherwise
+        """
         if self.canCastle and not self.InCheck():
             row = self.field.position[0]
             col = self.field.position[1]
@@ -217,11 +215,12 @@ class King(Piece.Piece):
 
         return False
 
-    """ Checks if the king is in check
-        Returns True if the king is in enemy pieces attack possibilities, False otherwise
-    """
-
     def InCheck(self):
+        """
+        Checks if the king is in check
+        :return: True if the king is in enemy pieces attack possibilities, False otherwise
+        """
+
         enemyAttackMoves = []
         if self.color == "white":
             enemyPieces = self.table.blackPieces
@@ -234,11 +233,14 @@ class King(Piece.Piece):
         if str(self.field) in enemyAttackMoves: return True
         return False
 
-    """ Moves the king to a field from a list of Field objects
-        Returns None
-    """
-
     def Move(self, newfield, moves):
+        """
+        Moves the king to a field from a list of Field objects
+
+        :param newfield: field I move the king to
+        :param moves: list of Field objects representing the king's correct or possible moves
+        :return: None
+        """
         row = self.field.position[0]
         col = self.field.position[1]
         chessboard = self.table.BoardFields
@@ -270,11 +272,10 @@ class King(Piece.Piece):
         else:
             print(self.Warning())
 
-    """ Shows the warning for making an invalid move for the king
-        Returns a string
-    """
-
     def Warning(self):
+        """ Shows the warning for making an invalid move for the king
+            :return: a string
+        """
         return "That is not a correct move for the King"
 
     def __str__(self):

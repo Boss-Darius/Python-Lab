@@ -14,10 +14,15 @@ import copy
 
 
 class GUI:
-    # contructor pentru interfata grafica
-    # initializeaza fereastra pentru setarea jucatorilor si dupa
-    # reseteaza fereastra pentru a incepe jocul de sah
+    """
+    This class creates the graphical user interface and the chess game
+    """
+
     def __init__(self):
+        """
+            Creates the window for seting the players names, color and types
+            :return :GUI object
+        """
         self.board = ChessBoard.Board()
         self.previousPositions = []
         # adding the players
@@ -48,7 +53,7 @@ class GUI:
             piece_image = ImageTk.PhotoImage(piece_image)
             self.images[str(piece)] = piece_image
         # adding the background
-        bg = tk.PhotoImage(file="Images/Tabla.png")
+        bg = tk.PhotoImage(file="Images/blue.png")
 
         self.canvas = tk.Canvas(self.window, width=700, height=700)
         self.canvas.pack(fill="both", expand=True)
@@ -120,8 +125,11 @@ class GUI:
 
         self.window.mainloop()
 
-    # schimba jucatorul curent
+    # """Changes the current player"""
+
     def SwitchPlayer(self):
+        """Changes the current player
+           :return: None"""
         if self.currentPlayer == self.firstPlayer:
             self.currentPlayer = self.secondPlayer
         else:
@@ -133,6 +141,10 @@ class GUI:
     # si initializeaza jocul de sah
 
     def CreateGame(self):
+        """
+        Creates the game
+        :return: None
+        """
         if self.playAsWhite:
 
             self.firstPlayer = Player.Player(self.board, "white")
@@ -225,6 +237,10 @@ class GUI:
 
     # sterge fereastra de initializare a jocului si o creeaza pe cea pentru joc
     def ResetWindow(self):
+        """
+        Resets the window and displays the board and pieces on screen
+        :return: None
+        """
         self.canvas.delete("all")
 
         imagine1 = Image.open("Images/rege alb2.png")
@@ -240,8 +256,10 @@ class GUI:
         self.state = "select-piece"
         # self.canvas.create_image(0, 0, image=bg, anchor="nw")
 
-    # creeaza grid-ul pentru tabla de sah
     def DisplayBoard(self):
+        """Creates the grid for the chessboard and displays it
+               :return None
+            """
         for row in range(8):
             for col in range(8):
                 color = "#FFF2BD" if (row + col) % 2 == 0 else "#744C29"
@@ -253,12 +271,28 @@ class GUI:
 
                 self.canvas.tag_bind(f"square_{row}_{col}", "<Button-1>",
                                      lambda event, r=row, c=col: self.ClickField(r, c))
+        # adaugam cifrele pentru randuri
+        for row in range(8):
+            number_text = str(8 - row)
+            x_text, y_text = 5, row * 87.5 + 87.5 // 2
+            self.canvas.create_text(x_text, y_text, text=number_text, anchor="w", font=("Arial", 12))
+
+            # adaugam literele pentru coloane
+        for col in range(8):
+            letter_text = chr(ord('A') + col)
+            x_text, y_text = col * 87.5 + 87.5 // 2, 690  # Adjust the y-coordinate if needed
+            self.canvas.create_text(x_text, y_text, text=letter_text, anchor="c", font=("Arial", 12))
 
         self.DisplayPieces()
 
     # preia piesa de pe camplul respectiv sau muta piesa jucatorului curent pe campul respectiv
     def ClickField(self, row, col):
-
+        """
+        Select the field either to move a piece there or to select the piece on it
+        :param row: row of the field
+        :param col: column of the field
+        :return: None
+        """
         self.currentPlayer.GetPieces()
         print(self.currentPlayer.name + " este la mutare! si are piesele")
 
@@ -300,12 +334,12 @@ class GUI:
                     self.state = "select-field"
                     print("starea este : ", self.state)
 
-    """selecteaza piesa pentru jucatorul curent sau captureaza piesa adversa
-    
-       returneaza None
-    """
-
     def ClickPiece(self, row, col):
+        """Selects a piece for the player to move it or to be captured
+            :parameter row = the row of thr piece's field
+            :parameter col= the column of the piece's field
+            :returns None
+            """
         print(self.currentPlayer.name + " este la mutare! si are piesele")
 
         self.currentPlayer.GetPieces()
@@ -349,12 +383,11 @@ class GUI:
             #         self.state="select-field"
             #     # self.currentPlayer.field=self.board.BoardFields[8*(row)+col]
 
-    """afiseaza piesele de sah pe campurile pe care se afla
-    
-       retunreaza None
-    """
-
     def DisplayPieces(self):
+        """Displays the pieces on the screen
+
+           :return: None
+        """
         square_size = 87.5
         for row in range(8):
             for col in range(8):
@@ -370,12 +403,11 @@ class GUI:
                                              tags=piece_tag)
                     self.canvas.tag_bind(piece_tag, "<Button-1>", lambda event, r=row, c=col: self.ClickPiece(r, c))
 
-    """verifica daca jucatorul curent este AI sau utilizator efectueaza mutarea pentru jucator
-    
-       returnaza None
-    """
-
     def MoveForPlayer(self):
+        """Execute the move for the current player then checks if the game has ended
+
+           :return: None
+        """
         print("am intrat in move Player")
         if isinstance(self.currentPlayer, AI.AI):
             # AI-ul va muta
@@ -402,35 +434,35 @@ class GUI:
         # afisam mutarea si scimbam jucatorul
         print("Verific daca jucatorul e in remiza")
         if self.firstPlayer.InsufficientMaterial() and self.secondPlayer.InsufficientMaterial():
-            self.canvas.create_text(300, 350,
+            self.canvas.create_text(340, 370,
                                     text="Remiza :/",
                                     font=("Helvetica", 30), fill="red")
             self.state = "game-ended"
         if self.ThreeHoldRule():
-            self.canvas.create_text(300, 350,
+            self.canvas.create_text(340, 370,
                                     text="Remiza: 3 pozitii identice",
                                     font=("Helvetica", 30), fill="red")
             self.state = "game-ended"
         if self.board.noCaptureCount == 50:
-            self.canvas.create_text(300, 350,
+            self.canvas.create_text(340, 370,
                                     text="Remiza: 50 de mutari fara capturi",
                                     font=("Helvetica", 30), fill="red")
             self.state = "game-ended"
         if self.currentPlayer.StaleMated():
             print("Juvatorul e in remiza")
-            self.canvas.create_text(300, 350,
+            self.canvas.create_text(340, 370,
                                     text="Pat :/",
                                     font=("Helvetica", 30), fill="red")
             self.state = "game-ended"
         if self.currentPlayer.CheckMated():
             # utilizatorul pierde
             if self.currentPlayer == self.firstPlayer:
-                self.canvas.create_text(300, 350,
+                self.canvas.create_text(340, 370,
                                         text=self.secondPlayer.name + " a casitigat! " + self.firstPlayer.name + " a pierdut. :(",
                                         font=("Helvetica", 20), fill="red")
                 self.state = "game-ended"
             else:
-                self.canvas.create_text(300, 350,
+                self.canvas.create_text(340, 370,
                                         text=self.firstPlayer.name + " a casitigat! " + self.secondPlayer.name + " a pierdut. :(",
                                         font=("Helvetica", 20), fill="red")
             self.state = "game-ended"
@@ -445,9 +477,10 @@ class GUI:
             self.state = "select-piece"
             # print("starea este : ", self.state)
 
-    """creaza fereastra pentru promovarea pionului"""
-
     def CreateSelectionForPromotion(self):
+        """Creates a window for selection the piece to promote the pawn to
+           :return: None
+           """
         print("Promovam pionul lui " + self.currentPlayer.name)
         print(self.currentPlayer.currentPiece, " ", self.currentPlayer.currentPiece.field)
         self.selectionMenu = tk.Toplevel(self.window)
@@ -472,9 +505,11 @@ class GUI:
 
         self.window.wait_window(self.selectionMenu)
 
-    """promoveaza pionul in piesa aleasa de jucator prin apasarea butonului din fereastra de selectie"""
-
     def Promotion(self, piece):
+        """Promotes the pawn to a specific piece
+           :parameter piece= the piece that I want to turn the pawn to
+           :returns None
+           """
         field = self.currentPlayer.currentPiece.field
         print("Alegem noua piesa pentru: " + self.currentPlayer.name)
         print(self.currentPlayer.currentPiece, " ", self.currentPlayer.currentPiece.field)
@@ -493,12 +528,11 @@ class GUI:
         field.ChangeStatus()
         self.selectionMenu.destroy()
 
-    """verifica daca nu s-au repetat 3 pozitii pana in momentul curent
-    
-       returneaza 
-    """
-
     def ThreeHoldRule(self):
+        """verifica daca nu s-au repetat 3 pozitii pana in momentul curent
+
+           :return: True if the three hold rule has occured, False otherwise
+        """
         # print("regula de 3 mutari")
         # print(self.previousPositions)
         for position in self.previousPositions:
