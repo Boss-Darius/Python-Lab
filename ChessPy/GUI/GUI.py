@@ -1,15 +1,22 @@
 import tkinter as tk
-
+import Pieces
+from Pieces import King
+from Pieces import Pawn
+from Pieces import Bishop
+from Pieces import Knight
+from Pieces import Rook
+from Pieces import Queen
 import Pieces.Pawn
 from Field import ChessBoard
 from PIL import ImageTk, Image
 from Players import Player, AI
+import copy
 
 
 class GUI:
     def __init__(self):
         self.board = ChessBoard.Board()
-
+        self.previousPositions = []
         # adding the players
         self.currentPlayer = None
         self.firstPlayer = None
@@ -116,7 +123,7 @@ class GUI:
         else:
             self.currentPlayer = self.firstPlayer
 
-        print(self.currentPlayer.name+" este acum la mutare")
+        print(self.currentPlayer.name + " este acum la mutare")
 
     def CreateGame(self):
         if self.playAsWhite:
@@ -248,7 +255,8 @@ class GUI:
             posibilities = [str(field) for field in piece.FilterMoves()]
             print(str(piece) + " " + str(piece.field), ' ', posibilities)
         print("starea este : ", self.state)
-        print(row, ' ', col, ' ', str(self.board.GetPiece(self.board.BoardFields[8 * ((row)) + col])))
+        print(row, ' ', col, ' ', str(self.board.GetPiece(self.board.BoardFields[8 * ((row)) + col])), " ",
+              self.board.BoardFields[8 * ((row)) + col].occupied)
         # Daca muta AI-ul nu mai e nevoie sa selectez piesa sau campul
         if isinstance(self.currentPlayer, AI.AI):
             self.MoveForPlayer()
@@ -353,18 +361,33 @@ class GUI:
             # mutam piesa
             self.currentPlayer.currentPiece.Move(self.currentPlayer.field,
                                                  self.currentPlayer.currentPiece.FilterMoves())
-        #checking if the player has promoted a pawn
+        # checking if the player has promoted a pawn
 
+        if isinstance(self.currentPlayer.currentPiece, Pieces.Pawn.Pawn):
+            if self.currentPlayer.currentPiece.promoted:
+                self.CreateSelectionForPromotion()
+
+        self.previousPositions += [str(self.board)]
         self.SwitchPlayer()
         self.ResetWindow()
 
         self.currentPlayer.GetPieces()
         # afisam mutarea si scimbam jucatorul
         print("Verific daca jucatorul e in remiza")
+        if self.ThreeHoldRule():
+            self.canvas.create_text(300, 350,
+                                    text="Remiza: 3 pozitii identice",
+                                    font=("Helvetica", 30), fill="red")
+            self.state = "game-ended"
+        if self.board.noCaptureCount == 50:
+            self.canvas.create_text(300, 350,
+                                    text="Remiza: 50 de mutari fara capturi",
+                                    font=("Helvetica", 30), fill="red")
+            self.state = "game-ended"
         if self.currentPlayer.StaleMated():
             print("Juvatorul e in remiza")
             self.canvas.create_text(300, 350,
-                                    text="Remiza",
+                                    text="Pat :/",
                                     font=("Helvetica", 30), fill="red")
             self.state = "game-ended"
         if self.currentPlayer.CheckMated():
@@ -389,3 +412,57 @@ class GUI:
                     break
             self.state = "select-piece"
             # print("starea este : ", self.state)
+
+    def CreateSelectionForPromotion(self):
+        print("Promovam pionul lui " + self.currentPlayer.name)
+        print(self.currentPlayer.currentPiece, " ", self.currentPlayer.currentPiece.field)
+        self.selectionMenu = tk.Toplevel(self.window)
+        self.selectionMenu.title("Pawn Promotion")
+        self.selectionMenu.iconbitmap("Images/iconita.ico")
+
+        label = tk.Label(self.selectionMenu, text="Promote this bastard to:")
+        label.pack(pady=10)
+
+        self.selectionMenu.grab_set()
+
+        # adding the buttons:
+        if self.currentPlayer.color == "white":
+
+            button_images = ["♕", "♖", "♗", "♘"]
+
+        else:
+            button_images = ["♛", "♜", "♝", "♞"]
+        for i, image in enumerate(button_images, start=1):
+            button = tk.Button(self.selectionMenu, image=self.images[image], command=lambda t=i: self.Promotion(t))
+            button.pack()
+
+        self.window.wait_window(self.selectionMenu)
+
+    def Promotion(self, piece):
+        field = self.currentPlayer.currentPiece.field
+        print("Alegem noua piesa pentru: " + self.currentPlayer.name)
+        print(self.currentPlayer.currentPiece, " ", self.currentPlayer.currentPiece.field)
+        if piece == 1: Pieces.Queen.Queen(self.board, self.currentPlayer.currentPiece.field.position,
+                                          self.currentPlayer.color)
+        if piece == 2: Pieces.Rook.Rook(self.board, self.currentPlayer.currentPiece.field.position,
+                                        self.currentPlayer.color)
+        if piece == 3: Pieces.Bishop.Bishop(self.board, self.currentPlayer.currentPiece.field.position,
+                                            self.currentPlayer.color)
+        if piece == 4: Pieces.Knight.Knight(self.board, self.currentPlayer.currentPiece.field.position,
+                                            self.currentPlayer.color)
+
+        # print("campul e acum ocupat? ",field.occupied)
+        self.board.RemovePiece(self.currentPlayer.currentPiece)
+        # print("campul e acum ocupat2? ",field.occupied)
+        field.ChangeStatus()
+        self.selectionMenu.destroy()
+
+    def ThreeHoldRule(self):
+        # print("regula de 3 mutari")
+        # print(self.previousPositions)
+        for position in self.previousPositions:
+            # print(position)
+            # print(self.previousPositions.count(position))
+            if self.previousPositions.count(position) == 3:
+                return True
+        return False

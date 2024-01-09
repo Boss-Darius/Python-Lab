@@ -6,6 +6,7 @@ from Pieces import Bishop
 from Pieces import Knight
 from Pieces import Rook
 from Pieces import Queen
+import copy
 
 
 class Board:
@@ -13,6 +14,7 @@ class Board:
         self.whitePieces = whitePieces
         self.blackPieces = blackPieces
         self.BoardFields = []
+        self.noCaptureCount = 0
 
         for i in range(0, 8):
             for j in range(0, 8):
@@ -22,6 +24,7 @@ class Board:
         self.whitePieces = []
         self.blackPieces = []
         self.BoardFields = []
+        self.noCaptureCount = 0
 
         for i in range(0, 8):
             for j in range(0, 8):

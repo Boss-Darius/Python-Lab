@@ -1,6 +1,6 @@
 from Pieces import Piece
 from Pieces import Rook
-
+import copy
 
 class King(Piece.Piece):
     def __init__(self, table, position, color):
@@ -15,9 +15,10 @@ class King(Piece.Piece):
         self.rook2 = None
 
     def Image(self):
-        if self.color=="white":
+        if self.color == "white":
             return "Images/rege alb2.png"
-        else : return "Images/rege negru2.png"
+        else:
+            return "Images/rege negru2.png"
 
     def PossibleMoves(self):
         moves = []
@@ -228,6 +229,9 @@ class King(Piece.Piece):
 
             if newfield.occupied:
                 self.table.RemovePiece(self.table.GetPiece(newfield))
+                self.table.noCaptureCount = 0
+            else:
+                self.table.noCaptureCount += 1
 
             self.field.ChangeStatus()
             self.field = newfield

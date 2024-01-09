@@ -1,6 +1,7 @@
 import Pieces.King
-import  copy
+import copy
 from Field import Field
+import copy
 
 
 class Piece:
@@ -19,7 +20,7 @@ class Piece:
 
     def CanCapture(self, row, col):
         chessboard = self.table.BoardFields
-        if (self.color == "white" and chessboard[ 8 * (7 - (row)) + col] in self.table.BlackPiecesFields()):
+        if (self.color == "white" and chessboard[8 * (7 - (row)) + col] in self.table.BlackPiecesFields()):
             # print("capture for white")
             # we can't capture the kings
             if not (isinstance(self.table.GetPiece(chessboard[8 * (7 - (row)) + col]), Pieces.King.King)): return True
@@ -43,7 +44,7 @@ class Piece:
 
         movesList = self.PossibleMoves()
         filteredMoves = []
-        originalRow,originalCol=self.field.position
+        originalRow, originalCol = self.field.position
         for move in movesList:
             itermediateState = copy.deepcopy(self.table)
             # print("stare curenta")
@@ -89,12 +90,18 @@ class Piece:
 
     def Warning(self):
         return "That is not a correct move for this piece"
-    def Move(self, newfield,moves):
+
+    def Move(self, newfield, moves):
         if newfield in moves:
             if newfield.occupied:
                 self.table.RemovePiece(self.table.GetPiece(newfield))
+                self.table.noCaptureCount = 0
+            else:
+                self.table.noCaptureCount += 1
+
             self.field.ChangeStatus()
             self.field = newfield
             newfield.ChangeStatus()
+
         else:
             print(self.Warning())
